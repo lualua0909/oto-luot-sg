@@ -27,42 +27,29 @@ function carSlug(title: string, year: number) {
 
 /** Get all cars that are published ("dang-ban"), newest first. Used on listing pages. */
 export async function getPublishedCars(max = 60): Promise<Car[]> {
-  const q = query(
-    collection(db, CARS),
-    where("status", "==", "dang-ban"),
-    orderBy("createdAt", "desc"),
-    fsLimit(max)
-  );
+  const cars = await getRecentCars(max);
+  return cars.filter((c) => c.status === "dang-ban").slice(0, max);
+}
+
+/** Newest cars, sorted by a single field so no composite Firestore index is needed. */
+async function getRecentCars(max = 60): Promise<Car[]> {
+  const q = query(collection(db, CARS), orderBy("createdAt", "desc"), fsLimit(max * 3));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Car, "id">) }));
 }
 
 /** Get featured cars for the homepage. */
 export async function getFeaturedCars(max = 12): Promise<Car[]> {
-  const q = query(
-    collection(db, CARS),
-    where("status", "==", "dang-ban"),
-    where("isFeatured", "==", true),
-    orderBy("createdAt", "desc"),
-    fsLimit(max)
-  );
-  const snap = await getDocs(q);
-  const results = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Car, "id">) }));
+  const published = await getPublishedCars(max);
+  const results = published.filter((c) => c.isFeatured).slice(0, max);
   if (results.length > 0) return results;
   // Fallback: no cars marked featured yet → just show latest.
   return getPublishedCars(max);
 }
 
 export async function getCarsByBrand(brandSlug: string, max = 60): Promise<Car[]> {
-  const q = query(
-    collection(db, CARS),
-    where("status", "==", "dang-ban"),
-    where("brand", "==", brandSlug),
-    orderBy("createdAt", "desc"),
-    fsLimit(max)
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Car, "id">) }));
+  const published = await getPublishedCars(max);
+  return published.filter((c) => c.brand === brandSlug).slice(0, max);
 }
 
 export async function getCarBySlug(slug: string): Promise<Car | null> {

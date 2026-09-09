@@ -11,9 +11,16 @@ function mergeBrands(saved: Brand[]) {
 }
 
 export function subscribeToBrands(callback: (brands: Brand[]) => void) {
-  return onSnapshot(query(brandsCollection, orderBy("order")), (snapshot) => {
-    callback(mergeBrands(snapshot.docs.map((item) => item.data() as Brand)));
-  });
+  return onSnapshot(
+    query(brandsCollection, orderBy("order")),
+    (snapshot) => {
+      callback(mergeBrands(snapshot.docs.map((item) => item.data() as Brand)));
+    },
+    () => {
+      // Firestore unreachable or rules deny reads → keep the built-in brand list.
+      callback(mergeBrands([]));
+    }
+  );
 }
 
 export async function saveBrand(brand: Brand): Promise<void> {

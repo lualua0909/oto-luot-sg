@@ -22,14 +22,13 @@ function newsSlug(title: string) {
 }
 
 export async function getPublishedNews(max = 20): Promise<NewsPost[]> {
-  const q = query(
-    collection(db, NEWS),
-    where("isPublished", "==", true),
-    orderBy("createdAt", "desc"),
-    fsLimit(max)
-  );
+  // Sorted by a single field so no composite Firestore index is needed.
+  const q = query(collection(db, NEWS), orderBy("createdAt", "desc"), fsLimit(max * 3));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<NewsPost, "id">) }));
+  return snap.docs
+    .map((d) => ({ id: d.id, ...(d.data() as Omit<NewsPost, "id">) }))
+    .filter((post) => post.isPublished)
+    .slice(0, max);
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsPost | null> {
