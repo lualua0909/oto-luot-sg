@@ -1,10 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Phone, MessageCircle, Facebook } from "lucide-react";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 
 export function StickyContactBar() {
   const site = useShowroomSettings();
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin")) return null;
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t border-border bg-background shadow-[0_-4px_16px_rgba(0,0,0,0.08)] md:hidden">
       <a

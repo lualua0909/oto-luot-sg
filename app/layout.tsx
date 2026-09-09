@@ -87,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ShowroomSettingsProvider>
           <BrandsProvider>
             <Header />
-            <main className="flex-1 pb-16 md:pb-0">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
             <StickyContactBar />
           </BrandsProvider>

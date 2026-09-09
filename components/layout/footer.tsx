@@ -14,7 +14,7 @@ const POLICY_LINKS = [
 export function Footer() {
   const site = useShowroomSettings();
   return (
-    <footer className="border-t border-border bg-primary text-primary-foreground">
+    <footer className="border-t border-border bg-primary pb-16 text-primary-foreground md:pb-0">
       <div className="container-page grid grid-cols-1 gap-10 py-12 md:grid-cols-4">
         <div>
           <p className="font-display text-lg font-bold">{site.name}</p>
