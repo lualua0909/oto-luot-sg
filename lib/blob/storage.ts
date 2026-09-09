@@ -1,8 +1,10 @@
 import { upload } from "@vercel/blob/client";
 import { CarImage } from "../types";
+import { toWebp } from "./webp";
 
 /**
  * Upload one image file to Vercel Blob under `folder/`.
+ * The file is converted to WebP first (see `toWebp`).
  * Returns the public URL + blob pathname (kept for the delete flow).
  * Pass `onProgress` (0-100) to drive a progress bar in the admin UI.
  */
@@ -11,8 +13,9 @@ export async function uploadImage(
   folder: "cars" | "news" | "brands",
   onProgress?: (pct: number) => void
 ): Promise<CarImage> {
-  const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-  const blob = await upload(`${folder}/${Date.now()}-${safeName}`, file, {
+  const webpFile = await toWebp(file);
+  const safeName = webpFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+  const blob = await upload(`${folder}/${Date.now()}-${safeName}`, webpFile, {
     access: "public",
     handleUploadUrl: "/api/upload",
     onUploadProgress: ({ percentage }) => onProgress?.(Math.round(percentage)),
