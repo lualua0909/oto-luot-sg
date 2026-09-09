@@ -8,6 +8,8 @@ import { StickyContactBar } from "@/components/shared/sticky-contact-bar";
 import { Toaster } from "sonner";
 import { ShowroomSettingsProvider } from "@/components/shared/showroom-settings-provider";
 import { BrandsProvider } from "@/components/shared/brands-provider";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const display = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -91,6 +93,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </BrandsProvider>
         </ShowroomSettingsProvider>
         <Toaster richColors position="top-center" />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
