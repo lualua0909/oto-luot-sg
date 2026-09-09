@@ -11,11 +11,6 @@ export function formatPriceTrieu(trieu: number) {
   return `${trieu.toLocaleString("vi-VN")} triệu`;
 }
 
-/** Format a plain VND integer amount, e.g. 330000000 -> "330.000.000 đ" */
-export function formatVND(amount: number) {
-  return `${amount.toLocaleString("vi-VN")} đ`;
-}
-
 export function formatDate(date: Date | string | number) {
   const d = typeof date === "object" ? date : new Date(date);
   return d.toLocaleDateString("vi-VN", {
