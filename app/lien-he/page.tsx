@@ -1,0 +1,61 @@
+import type { Metadata } from "next";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { LeadForm } from "@/components/home/lead-form";
+import { SITE } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "Liên hệ",
+  description: `Liên hệ ${SITE.fullName} — hotline ${SITE.phoneDisplay}, địa chỉ ${SITE.address}.`,
+};
+
+export default function ContactPage() {
+  return (
+    <div>
+      <div className="container-page py-10">
+        <SectionHeading
+          eyebrow="Liên hệ"
+          title="Liên hệ với chúng tôi"
+          description="Ghé showroom, gọi điện hoặc để lại thông tin — chúng tôi luôn sẵn sàng hỗ trợ."
+        />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
+            <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <p className="text-sm font-semibold">Địa chỉ showroom</p>
+              <p className="mt-1 text-sm text-muted-foreground">{SITE.address}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
+            <Phone className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <p className="text-sm font-semibold">Hotline / Zalo</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {SITE.phoneDisplay} ({SITE.contactPerson})
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
+            <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <div>
+              <p className="text-sm font-semibold">Giờ mở cửa</p>
+              <p className="mt-1 text-sm text-muted-foreground">7:30 - 19:00, tất cả các ngày trong tuần</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 overflow-hidden rounded-xl border border-border shadow-card">
+          <iframe
+            src={SITE.mapEmbedUrl}
+            className="h-80 w-full"
+            loading="lazy"
+            title="Bản đồ showroom Ô TÔ LƯỚT SÀI GÒN"
+          />
+        </div>
+      </div>
+
+      <LeadForm />
+    </div>
+  );
+}

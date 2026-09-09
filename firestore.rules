@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────
+// Copy this file's content into Firebase Console → Firestore Database →
+// Rules, and click "Publish". Any signed-in Firebase Auth user is treated
+// as an admin — so only create admin accounts for people you trust
+// (Firebase Console → Authentication → Users → Add user).
+// ─────────────────────────────────────────────────────────────────────────
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Car listings — anyone can read, only admins can write.
+    match /cars/{carId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // News / knowledge articles — anyone can read, only admins can write.
+    match /news/{postId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Leads ("đăng ký nhận tư vấn") — anyone can submit (create), but only
+    // admins can read the list or change status. This keeps customer phone
+    // numbers private while still letting the public contact form work.
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Public showroom contact and social links — editable by administrators.
+    match /settings/{settingsId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Vehicle brands and logos shown in the public catalogue.
+    match /brands/{brandId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}

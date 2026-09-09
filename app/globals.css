@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Design tokens — Ô TÔ LƯỚT SÀI GÒN
+  Palette chosen for a used-car marketplace aimed at buyers who are not
+  tech-savvy: a trustworthy deep road-blue as the anchor, a warm signal-amber
+  for every "call to action", and a soft neutral background so photos of
+  cars stay the visual focus.
+*/
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;      /* warm paper white */
+    --foreground: 216 28% 12%;     /* near-black ink, not pure black */
+
+    --card: 0 0% 100%;
+    --card-foreground: 216 28% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 28% 12%;
+
+    --primary: 213 56% 21%;        /* road-blue: trust, header, buttons */
+    --primary-foreground: 40 20% 97%;
+
+    --secondary: 213 30% 95%;      /* pale blue tint for chips/sections */
+    --secondary-foreground: 213 56% 21%;
+
+    --accent: 22 88% 55%;          /* signal amber — calls to action */
+    --accent-foreground: 0 0% 100%;
+
+    --success: 152 45% 30%;        /* verified / trust badge */
+    --success-foreground: 0 0% 100%;
+
+    --muted: 220 14% 94%;
+    --muted-foreground: 216 12% 42%;
+
+    --destructive: 3 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 216 16% 88%;
+    --input: 216 16% 88%;
+    --ring: 213 56% 21%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-accent/20;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
