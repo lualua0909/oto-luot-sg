@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail, Facebook } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
@@ -18,7 +19,16 @@ export function Footer() {
     <footer className="border-t border-border bg-primary pb-16 text-primary-foreground md:pb-0">
       <div className="container-page grid grid-cols-1 gap-10 py-12 md:grid-cols-4">
         <div>
-          <p className="font-display text-lg font-bold">{site.name}</p>
+          <Link href="/" className="inline-flex items-center gap-3">
+            <Image
+              src="/images/logo.png"
+              alt={site.name}
+              width={120}
+              height={64}
+              className="h-14 w-auto shrink-0 object-contain"
+            />
+            <span className="font-display text-lg font-bold">{site.name}</span>
+          </Link>
           <p className="mt-3 text-sm leading-relaxed text-primary-foreground/75">
             {site.description}
           </p>

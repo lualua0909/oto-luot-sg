@@ -16,7 +16,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
-        sans: ["var(--font-body)", "sans-serif"],
+        sans: ['"Reddit Sans"', "var(--font-body)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

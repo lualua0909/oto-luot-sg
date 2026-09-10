@@ -37,15 +37,19 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur">
       {/* Brand band — logo on the left, slogan centred, contact on the right. */}
-      <div className="bg-accent text-accent-foreground">
-        <div className="container-page flex h-14 items-center justify-between gap-4 md:h-16">
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+      <div className="bg-[#183354] text-white">
+        <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-3 rounded outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          >
             <Image
               src="/images/logo.png"
               alt={site.name}
-              width={40}
-              height={40}
-              className="h-9 w-9 shrink-0 rounded-full object-cover md:h-10 md:w-10"
+              width={120}
+              height={64}
+              priority
+              className="h-16 w-auto shrink-0 object-contain md:h-20"
             />
             <span className="font-display text-base font-extrabold uppercase leading-none tracking-tight md:text-xl">
               {site.name}
