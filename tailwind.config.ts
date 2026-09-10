@@ -76,11 +76,17 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        // The track holds the brand list twice, so shifting by half its width loops seamlessly.
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-up": "fade-up 0.5s ease-out",
+        marquee: "marquee 40s linear infinite",
       },
       boxShadow: {
         card: "0 1px 2px rgba(20,30,45,0.06), 0 8px 24px -12px rgba(20,30,45,0.12)",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MapPin, Phone, Mail, Facebook } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
+import { T } from "@/components/shared/editable-text";
 
 const POLICY_LINKS = [
   { href: "/chinh-sach/mua-hang-thanh-toan", label: "Mua hàng & thanh toán" },
@@ -38,20 +39,20 @@ export function Footer() {
               aria-label="Zalo"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold hover:bg-white/20"
             >
-              Zalo
+              <T id="footer.zalo">Zalo</T>
             </a>
           </div>
         </div>
 
         <div>
           <p className="font-display text-sm font-semibold uppercase tracking-wide text-primary-foreground/60">
-            Điều hướng
+            <T id="footer.navTitle">Điều hướng</T>
           </p>
           <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/85">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="hover:text-accent">
-                  {l.label}
+                  <T id={`nav${l.href.replace(/\//g, ".")}`}>{l.label}</T>
                 </Link>
               </li>
             ))}
@@ -60,13 +61,13 @@ export function Footer() {
 
         <div>
           <p className="font-display text-sm font-semibold uppercase tracking-wide text-primary-foreground/60">
-            Chính sách
+            <T id="footer.policyTitle">Chính sách</T>
           </p>
           <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/85">
             {POLICY_LINKS.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="hover:text-accent">
-                  {l.label}
+                  <T id={`nav${l.href.replace(/\//g, ".")}`}>{l.label}</T>
                 </Link>
               </li>
             ))}
@@ -75,7 +76,7 @@ export function Footer() {
 
         <div>
           <p className="font-display text-sm font-semibold uppercase tracking-wide text-primary-foreground/60">
-            Liên hệ
+            <T id="footer.contactTitle">Liên hệ</T>
           </p>
           <ul className="mt-4 space-y-3 text-sm text-primary-foreground/85">
             <li className="flex gap-2.5">
@@ -93,9 +94,12 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-primary-foreground/60 md:flex-row">
-          <p>© {new Date().getFullYear()} {site.fullName}. Đã đăng ký bản quyền.</p>
+          <p>
+            © {new Date().getFullYear()} {site.fullName}.{" "}
+            <T id="footer.rights">Đã đăng ký bản quyền.</T>
+          </p>
           <Link href="/admin" className="hover:text-accent">
-            Quản trị viên
+            <T id="footer.admin">Quản trị viên</T>
           </Link>
         </div>
       </div>

@@ -5,9 +5,13 @@ import { SITE } from "@/lib/constants";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { StickyContactBar } from "@/components/shared/sticky-contact-bar";
+import { FloatingSocialRail } from "@/components/shared/floating-social-rail";
 import { Toaster } from "sonner";
 import { ShowroomSettingsProvider } from "@/components/shared/showroom-settings-provider";
 import { BrandsProvider } from "@/components/shared/brands-provider";
+import { ContentProvider } from "@/components/shared/content-provider";
+import { AuthProvider } from "@/lib/firebase/auth-context";
+import { getContentTexts } from "@/lib/firebase/content";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -57,7 +61,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const contentTexts = await getContentTexts().catch(() => ({}));
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
@@ -84,14 +90,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <ShowroomSettingsProvider>
-          <BrandsProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <StickyContactBar />
-          </BrandsProvider>
-        </ShowroomSettingsProvider>
+        <AuthProvider>
+          <ContentProvider initialTexts={contentTexts}>
+            <ShowroomSettingsProvider>
+              <BrandsProvider>
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <StickyContactBar />
+                <FloatingSocialRail />
+              </BrandsProvider>
+            </ShowroomSettingsProvider>
+          </ContentProvider>
+        </AuthProvider>
         <Toaster richColors position="top-center" />
         <Analytics />
         <SpeedInsights />

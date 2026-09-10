@@ -100,3 +100,14 @@ export interface CarFilters {
   yearFrom?: number;
   q?: string;
 }
+
+/** 0 = root, 1 = admin, 2 = user (default for newly created accounts). */
+export const ROLE = { ROOT: 0, ADMIN: 1, USER: 2 } as const;
+export type UserRole = (typeof ROLE)[keyof typeof ROLE];
+
+export interface AppUser {
+  uid: string;
+  email: string;
+  role: UserRole;
+  createdAt: number;
+}

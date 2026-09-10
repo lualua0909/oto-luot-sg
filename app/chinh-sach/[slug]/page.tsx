@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { T } from "@/components/shared/editable-text";
 
 const POLICIES: Record<string, { title: string; content: string[] }> = {
   "mua-hang-thanh-toan": {
@@ -43,11 +44,13 @@ export default function PolicyPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="container-page max-w-2xl py-10">
-      <h1 className="font-display text-2xl font-bold">{policy.title}</h1>
+      <h1 className="font-display text-2xl font-bold">
+        <T id={`policy.${params.slug}.title`}>{policy.title}</T>
+      </h1>
       <div className="mt-6 space-y-4">
         {policy.content.map((p, i) => (
           <p key={i} className="leading-relaxed text-foreground/85">
-            {p}
+            <T id={`policy.${params.slug}.paragraph${i + 1}`}>{p}</T>
           </p>
         ))}
       </div>

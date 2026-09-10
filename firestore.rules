@@ -2,15 +2,36 @@ rules_version = '2';
 
 // ─────────────────────────────────────────────────────────────────────────
 // Copy this file's content into Firebase Console → Firestore Database →
-// Rules, and click "Publish". Any signed-in Firebase Auth user is treated
-// as an admin — so only create admin accounts for people you trust
-// (Firebase Console → Authentication → Users → Add user).
+// Rules, and click "Publish".
+//
+// Roles live in /users/{uid}.role — 0 = root, 1 = admin, 2 = user. Accounts
+// get role 2 automatically on their first sign-in; promote someone by editing
+// their /users/{uid} document in the Firebase Console. Bootstrap the very
+// first root account the same way (sign in once, then set role to 0).
 // ─────────────────────────────────────────────────────────────────────────
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function role() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
     function isAdmin() {
-      return request.auth != null;
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && role() <= 1;
+    }
+
+    // Account profiles. A user may read only their own document and create it
+    // once with the default role (2); only root may change roles afterwards.
+    match /users/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.role == 2;
+      allow update, delete: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && role() == 0;
     }
 
     // Car listings — anyone can read, only admins can write.
@@ -35,6 +56,12 @@ service cloud.firestore {
 
     // Public showroom contact and social links — editable by administrators.
     match /settings/{settingsId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Editable frontend copy (content/site) — public reads, admin writes.
+    match /content/{docId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }

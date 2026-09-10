@@ -5,6 +5,7 @@ import { Car } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { formatPriceTrieu } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
+import { T } from "@/components/shared/editable-text";
 
 export function CarCard({ car }: { car: Car }) {
   return (
@@ -21,21 +22,21 @@ export function CarCard({ car }: { car: Car }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              Chưa có ảnh
+              <T id="car.card.noImage">Chưa có ảnh</T>
             </div>
           )}
           {/* Scrim keeps the price legible over bright car photos. */}
           <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
           {car.isVerified && (
             <Badge variant="success" className="absolute left-2.5 top-2.5 shadow-sm">
-              <BadgeCheck className="h-3.5 w-3.5" /> Đã kiểm định
+              <BadgeCheck className="h-3.5 w-3.5" /> <T id="car.card.verified">Đã kiểm định</T>
             </Badge>
           )}
           <div className="absolute bottom-2.5 left-2.5 font-display text-lg font-bold leading-none text-white drop-shadow">
             {formatPriceTrieu(car.priceTrieu)}
           </div>
           <span className="absolute bottom-3 right-2.5 rounded-md bg-white/90 px-2 py-0.5 text-[11px] font-semibold text-primary">
-            Đời {car.year}
+            <T id="car.card.year">Đời</T> {car.year}
           </span>
         </div>
 
@@ -46,7 +47,7 @@ export function CarCard({ car }: { car: Car }) {
 
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
-              <Gauge className="h-3.5 w-3.5" /> {car.odoKm ? `${car.odoKm.toLocaleString("vi-VN")} km` : "Odo đang cập nhật"}
+              <Gauge className="h-3.5 w-3.5" /> {car.odoKm ? `${car.odoKm.toLocaleString("vi-VN")} km` : <T id="car.card.odoUnknown">Odo đang cập nhật</T>}
             </span>
             <span className="h-3 w-px bg-border" />
             <span className="flex items-center gap-1">
@@ -70,13 +71,13 @@ export function CarCard({ car }: { car: Car }) {
           href={`/xe/${car.slug}`}
           className="flex-1 rounded-md border border-border px-3 py-2 text-center text-xs font-semibold text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary"
         >
-          Xem chi tiết
+          <T id="car.card.detail">Xem chi tiết</T>
         </Link>
         <a
           href={`tel:${SITE.phone}`}
           className="flex-1 rounded-md bg-primary px-3 py-2 text-center text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Liên hệ ngay
+          <T id="car.card.contact">Liên hệ ngay</T>
         </a>
       </div>
     </article>

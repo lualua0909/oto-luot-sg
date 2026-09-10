@@ -3,6 +3,7 @@ import { ClipboardCheck, HandCoins, Wallet, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SITE } from "@/lib/constants";
+import { T } from "@/components/shared/editable-text";
 
 export const metadata: Metadata = {
   title: "Dịch vụ thu xe",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 const SERVICES = [
   {
+    id: "services.item1",
     icon: ClipboardCheck,
     title: "Dịch vụ kiểm tra xe ô tô cũ",
     description:
@@ -24,6 +26,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "services.item2",
     icon: HandCoins,
     title: "Thu mua xe ô tô cũ",
     description:
@@ -36,6 +39,7 @@ const SERVICES = [
     ],
   },
   {
+    id: "services.item3",
     icon: Wallet,
     title: "Ô tô cũ trả góp",
     description:
@@ -53,6 +57,7 @@ export default function ServicesPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        id="services.heading"
         eyebrow="Dịch vụ"
         title="Dịch vụ thu xe & hỗ trợ khách hàng"
         description="Đồng hành cùng bạn từ lúc chọn xe, kiểm tra xe cho đến khi hoàn tất thủ tục mua bán."
@@ -64,18 +69,23 @@ export default function ServicesPage() {
             <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-primary">
               <s.icon className="h-6 w-6" />
             </span>
-            <h2 className="font-display text-lg font-semibold">{s.title}</h2>
-            <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+            <h2 className="font-display text-lg font-semibold">
+              <T id={`${s.id}.title`}>{s.title}</T>
+            </h2>
+            <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+              <T id={`${s.id}.description`}>{s.description}</T>
+            </p>
             <ul className="mt-4 space-y-2 text-sm">
-              {s.points.map((p) => (
+              {s.points.map((p, i) => (
                 <li key={p} className="flex items-start gap-2">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" /> {p}
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />{" "}
+                  <T id={`${s.id}.point${i + 1}`}>{p}</T>
                 </li>
               ))}
             </ul>
             <Button asChild variant="outline" className="mt-6">
               <a href={`tel:${SITE.phone}`}>
-                <Phone className="h-4 w-4" /> Liên hệ tư vấn
+                <Phone className="h-4 w-4" /> <T id="services.cta">Liên hệ tư vấn</T>
               </a>
             </Button>
           </div>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BODY_TYPES } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
+import { T } from "@/components/shared/editable-text";
 
 const SORTS: { label: string; compare?: (a: Car, b: Car) => number }[] = [
   { label: "Mới đăng trước" },
@@ -68,7 +69,7 @@ export function CarListing({ cars, initialBrand }: { cars: Car[]; initialBrand?:
             onClick={() => setShowFilters((s) => !s)}
           >
             <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Bộ lọc</span>
+            <span className="hidden sm:inline"><T id="cars.filters.toggle">Bộ lọc</T></span>
           </Button>
         </div>
 
@@ -142,14 +143,16 @@ export function CarListing({ cars, initialBrand }: { cars: Car[]; initialBrand?:
             }}
             className="flex w-fit items-center gap-1 text-xs font-medium text-primary hover:underline"
           >
-            <X className="h-3.5 w-3.5" /> Xóa tất cả bộ lọc
+            <X className="h-3.5 w-3.5" /> <T id="cars.filters.clear">Xóa tất cả bộ lọc</T>
           </button>
         )}
       </div>
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          Tìm thấy <span className="font-semibold text-foreground">{filtered.length}</span> xe phù hợp
+          <T id="cars.results.prefix">Tìm thấy</T>{" "}
+          <span className="font-semibold text-foreground">{filtered.length}</span>{" "}
+          <T id="cars.results.suffix">xe phù hợp</T>
         </p>
         <div className="flex items-center gap-2">
           <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
@@ -170,7 +173,7 @@ export function CarListing({ cars, initialBrand }: { cars: Car[]; initialBrand?:
 
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">
-          Không tìm thấy xe phù hợp. Hãy thử điều chỉnh bộ lọc hoặc gọi hotline để được tư vấn thêm xe chưa lên web.
+          <T id="cars.results.empty">Không tìm thấy xe phù hợp. Hãy thử điều chỉnh bộ lọc hoặc gọi hotline để được tư vấn thêm xe chưa lên web.</T>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">

@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { SectionHeading } from "@/components/shared/section-heading";
 import { LEAD_TOPICS, SITE } from "@/lib/constants";
 import { submitLead } from "@/lib/firebase/leads";
-import { Loader2, Phone } from "lucide-react";
+import { Headset, Loader2, Phone } from "lucide-react";
+import { T } from "@/components/shared/editable-text";
 
 export function LeadForm() {
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,8 @@ export function LeadForm() {
       <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border bg-card shadow-card lg:grid-cols-2">
         <div className="bg-primary p-8 text-primary-foreground sm:p-10">
           <SectionHeading
+            id="home.lead"
+            icon={Headset}
             eyebrow="Tư vấn miễn phí"
             title="Đăng ký nhận tư vấn - báo giá"
             description="Để lại thông tin, đội ngũ Ô TÔ LƯỚT SÀI GÒN sẽ liên hệ tư vấn trong vòng 30 phút."
@@ -57,25 +60,25 @@ export function LeadForm() {
             href={`tel:${SITE.phone}`}
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground"
           >
-            <Phone className="h-4 w-4" /> Hoặc gọi ngay {SITE.phoneDisplay}
+            <Phone className="h-4 w-4" /> <T id="home.lead.callNow">Hoặc gọi ngay</T> {SITE.phoneDisplay}
           </a>
         </div>
 
         <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 p-8 sm:grid-cols-2 sm:p-10">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="name">Họ và tên</Label>
+            <Label htmlFor="name"><T id="home.lead.labelName">Họ và tên</T></Label>
             <Input id="name" name="name" placeholder="Nguyễn Văn A" required />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="phone">Số điện thoại</Label>
+            <Label htmlFor="phone"><T id="home.lead.labelPhone">Số điện thoại</T></Label>
             <Input id="phone" name="phone" type="tel" placeholder="09xxxxxxxx" required />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="email">Email (không bắt buộc)</Label>
+            <Label htmlFor="email"><T id="home.lead.labelEmail">Email (không bắt buộc)</T></Label>
             <Input id="email" name="email" type="email" placeholder="ban@email.com" />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="topic">Chủ đề</Label>
+            <Label htmlFor="topic"><T id="home.lead.labelTopic">Chủ đề</T></Label>
             <Select value={topic} onValueChange={setTopic}>
               <SelectTrigger id="topic">
                 <SelectValue />
@@ -90,12 +93,12 @@ export function LeadForm() {
             </Select>
           </div>
           <div className="flex flex-col gap-1.5 sm:col-span-2">
-            <Label htmlFor="message">Nội dung</Label>
+            <Label htmlFor="message"><T id="home.lead.labelMessage">Nội dung</T></Label>
             <Textarea id="message" name="message" placeholder="Bạn cần tư vấn dòng xe nào, tầm giá bao nhiêu..." />
           </div>
           <Button type="submit" size="lg" variant="accent" disabled={loading} className="sm:col-span-2">
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            Gửi đăng ký
+            <T id="home.lead.submit">Gửi đăng ký</T>
           </Button>
         </form>
       </div>

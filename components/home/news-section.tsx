@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, BookOpen, CalendarDays } from "lucide-react";
 import { NewsPost } from "@/lib/types";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
@@ -11,6 +12,8 @@ export function NewsSection({ posts }: { posts: NewsPost[] }) {
     <section className="bg-secondary/40 py-14">
       <div className="container-page">
         <SectionHeading
+          id="home.news"
+          icon={BookOpen}
           eyebrow="Kiến thức"
           title="Chia sẻ kinh nghiệm mua bán xe"
           description="Kinh nghiệm thực tế giúp bạn mua xe cũ an tâm hơn."
@@ -34,13 +37,17 @@ export function NewsSection({ posts }: { posts: NewsPost[] }) {
                 )}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">
-                <span className="text-xs font-medium text-muted-foreground">
+                <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                  <CalendarDays className="h-3.5 w-3.5" />
                   {formatDate(post.createdAt)}
                 </span>
                 <h3 className="line-clamp-2 font-display text-sm font-semibold leading-snug">
                   {post.title}
                 </h3>
                 <p className="line-clamp-2 text-xs text-muted-foreground">{post.excerpt}</p>
+                <span className="mt-auto flex items-center gap-1 pt-2 text-xs font-semibold text-primary">
+                  Đọc tiếp <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </span>
               </div>
             </Link>
           ))}

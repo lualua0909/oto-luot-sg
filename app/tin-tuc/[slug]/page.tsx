@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
 import { SITE } from "@/lib/constants";
+import { T } from "@/components/shared/editable-text";
 
 export const revalidate = 60;
 
@@ -31,9 +32,9 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
   return (
     <article className="container-page max-w-3xl py-10">
       <nav className="mb-5 flex items-center gap-1 text-xs text-muted-foreground">
-        <Link href="/" className="hover:text-primary">Trang chủ</Link>
+        <Link href="/" className="hover:text-primary"><T id="breadcrumb.home">Trang chủ</T></Link>
         <span>/</span>
-        <Link href="/tin-tuc" className="hover:text-primary">Kiến thức</Link>
+        <Link href="/tin-tuc" className="hover:text-primary"><T id="breadcrumb.news">Kiến thức</T></Link>
       </nav>
 
       <p className="text-xs font-medium text-muted-foreground">{formatDate(post.createdAt)}</p>
@@ -50,8 +51,12 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
       </div>
 
       <div className="mt-10 rounded-xl border border-border bg-secondary/50 p-6 text-center">
-        <p className="font-display text-lg font-semibold">Cần tư vấn thêm về xe ô tô cũ?</p>
-        <p className="mt-1 text-sm text-muted-foreground">Gọi ngay hotline để được hỗ trợ miễn phí.</p>
+        <p className="font-display text-lg font-semibold">
+          <T id="news.detail.ctaTitle">Cần tư vấn thêm về xe ô tô cũ?</T>
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          <T id="news.detail.ctaSubtitle">Gọi ngay hotline để được hỗ trợ miễn phí.</T>
+        </p>
         <Button asChild variant="accent" size="lg" className="mt-4">
           <a href={`tel:${SITE.phone}`}>
             <Phone className="h-4 w-4" /> {SITE.phoneDisplay}

@@ -3,6 +3,7 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { LeadForm } from "@/components/home/lead-form";
 import { SITE } from "@/lib/constants";
+import { T } from "@/components/shared/editable-text";
 
 export const metadata: Metadata = {
   title: "Liên hệ",
@@ -14,6 +15,7 @@ export default function ContactPage() {
     <div>
       <div className="container-page py-10">
         <SectionHeading
+          id="contact.heading"
           eyebrow="Liên hệ"
           title="Liên hệ với chúng tôi"
           description="Ghé showroom, gọi điện hoặc để lại thông tin — chúng tôi luôn sẵn sàng hỗ trợ."
@@ -23,14 +25,14 @@ export default function ContactPage() {
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
             <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm font-semibold">Địa chỉ showroom</p>
+              <p className="text-sm font-semibold"><T id="contact.addressLabel">Địa chỉ showroom</T></p>
               <p className="mt-1 text-sm text-muted-foreground">{SITE.address}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
             <Phone className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm font-semibold">Hotline / Zalo</p>
+              <p className="text-sm font-semibold"><T id="contact.hotlineLabel">Hotline / Zalo</T></p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {SITE.phoneDisplay} ({SITE.contactPerson})
               </p>
@@ -39,8 +41,10 @@ export default function ContactPage() {
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
             <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm font-semibold">Giờ mở cửa</p>
-              <p className="mt-1 text-sm text-muted-foreground">7:30 - 19:00, tất cả các ngày trong tuần</p>
+              <p className="text-sm font-semibold"><T id="contact.hoursLabel">Giờ mở cửa</T></p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                <T id="contact.hours">7:30 - 19:00, tất cả các ngày trong tuần</T>
+              </p>
             </div>
           </div>
         </div>

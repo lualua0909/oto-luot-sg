@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getPublishedNews } from "@/lib/firebase/news";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
+import { T } from "@/components/shared/editable-text";
 
 export const revalidate = 60;
 
@@ -18,6 +19,7 @@ export default async function NewsListPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        id="news.heading"
         eyebrow="Kiến thức"
         title="Chia sẻ kiến thức về xe"
         description="Kinh nghiệm thực tế giúp bạn mua bán xe cũ an tâm hơn."
@@ -25,7 +27,7 @@ export default async function NewsListPage() {
 
       {posts.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">
-          Chưa có bài viết nào. Vào trang quản trị (/admin) để đăng bài đầu tiên.
+          <T id="news.empty">Chưa có bài viết nào. Vào trang quản trị (/admin) để đăng bài đầu tiên.</T>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

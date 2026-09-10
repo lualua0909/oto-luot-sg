@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Phone, MessageCircle, Facebook } from "lucide-react";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
+import { T } from "@/components/shared/editable-text";
 
 export function StickyContactBar() {
   const site = useShowroomSettings();
@@ -15,7 +16,7 @@ export function StickyContactBar() {
         className="flex flex-col items-center justify-center gap-0.5 bg-accent py-2.5 text-accent-foreground"
       >
         <Phone className="h-5 w-5" />
-        <span className="text-[11px] font-semibold">Gọi ngay</span>
+        <span className="text-[11px] font-semibold"><T id="sticky.call">Gọi ngay</T></span>
       </a>
       <a
         href={site.zalo}
@@ -24,7 +25,7 @@ export function StickyContactBar() {
         className="flex flex-col items-center justify-center gap-0.5 bg-primary py-2.5 text-primary-foreground"
       >
         <MessageCircle className="h-5 w-5" />
-        <span className="text-[11px] font-semibold">Zalo</span>
+        <span className="text-[11px] font-semibold"><T id="sticky.zalo">Zalo</T></span>
       </a>
       <a
         href={site.facebook}
@@ -33,7 +34,7 @@ export function StickyContactBar() {
         className="flex flex-col items-center justify-center gap-0.5 bg-[#1877F2] py-2.5 text-white"
       >
         <Facebook className="h-5 w-5" />
-        <span className="text-[11px] font-semibold">Messenger</span>
+        <span className="text-[11px] font-semibold"><T id="sticky.messenger">Messenger</T></span>
       </a>
     </div>
   );

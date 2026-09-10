@@ -17,6 +17,7 @@ export default async function CarListingPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        id="cars.heading"
         eyebrow="Mua bán ô tô"
         title="Tất cả xe đang bán"
         description="Lọc theo hãng, loại xe, hộp số hoặc mức giá để tìm xe phù hợp nhất với bạn."

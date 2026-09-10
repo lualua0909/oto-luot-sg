@@ -15,9 +15,14 @@ import {
   type User,
 } from "firebase/auth";
 import { firebaseApp } from "./client";
+import { ensureUserProfile, isAdminRole } from "./users";
+import type { AppUser } from "../types";
 
 interface AuthContextValue {
   user: User | null;
+  profile: AppUser | null;
+  /** true when the signed-in account has role 0 (root) or 1 (admin) */
+  isAdmin: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -27,12 +32,23 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
+      if (!u) {
+        setProfile(null);
+      } else {
+        try {
+          setProfile(await ensureUserProfile(u));
+        } catch {
+          // Firestore unreachable or rules deny → treat as the lowest role.
+          setProfile(null);
+        }
+      }
       setLoading(false);
     });
     return () => unsub();
@@ -47,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, profile, isAdmin: isAdminRole(profile?.role), loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
