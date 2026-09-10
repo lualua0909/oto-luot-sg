@@ -29,24 +29,24 @@ export function BrandGrid() {
 
       {/* Infinite marquee: the list is rendered twice and the track slides by half
           its width, so the second copy lands exactly where the first started. */}
-      <div className="group relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
-        <div className="flex w-max animate-marquee gap-3 group-hover:[animation-play-state:paused]">
+      <div className="group relative mt-6 overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <div className="flex w-max animate-marquee items-stretch gap-4 group-hover:[animation-play-state:paused]">
           {[...brands, ...brands].map((b, i) => (
             <Link
               key={`${b.slug}-${i}`}
               href={`/mua-ban-o-to/${b.slug}`}
               aria-hidden={i >= brands.length}
               tabIndex={i >= brands.length ? -1 : undefined}
-              className="flex w-[104px] shrink-0 flex-col items-center justify-center gap-2 rounded-xl border border-border bg-card p-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-secondary hover:shadow-md sm:w-[120px]"
+              className="flex w-[132px] shrink-0 flex-col items-center justify-center gap-3 rounded-2xl bg-card p-5 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl sm:w-[148px]"
             >
               {b.logoUrl ? (
-                <img src={b.logoUrl} alt="" className="h-11 w-11 rounded-full object-contain" />
+                <img src={b.logoUrl} alt="" className="h-16 w-16 object-contain" />
               ) : (
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-secondary font-display text-sm font-bold text-primary">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary font-display text-base font-bold text-primary">
                   {b.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
-              <span className="text-xs font-medium leading-tight text-foreground">{b.name}</span>
+              <span className="text-sm font-bold leading-tight text-foreground">{b.name}</span>
             </Link>
           ))}
         </div>

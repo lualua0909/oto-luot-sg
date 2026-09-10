@@ -9,8 +9,8 @@ export const SITE = {
   // Development fallback. Set NEXT_PUBLIC_SITE_URL to the production domain when deploying.
   url: "http://localhost:3000",
   phone: "0922549999",
-  phone2: "0926532222",
-  phoneDisplay: "0922 549 999 - 0926 532 222",
+  phone2: "0969550995",
+  phoneDisplay: "0922 54 9999 - 096 9550995",
   contactPerson: "",
   email: "",
   address: "1060 Nguyễn Ảnh Thủ, P. Trung Mỹ Tây, TP. Hồ Chí Minh",
