@@ -40,7 +40,7 @@ export default function AboutPage() {
           <p className="mt-4 text-sm text-muted-foreground">
             <T id="about.addressLabel">Địa chỉ showroom</T>: {SITE.address}
             <br />
-            <T id="about.hotlineLabel">Hotline / Zalo</T>: {SITE.phoneDisplay} ({SITE.contactPerson})
+            <T id="about.hotlineLabel">Hotline / Zalo</T>: {SITE.phoneDisplay}
           </p>
         </div>
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-card">

@@ -34,7 +34,7 @@ export default function ContactPage() {
             <div>
               <p className="text-sm font-semibold"><T id="contact.hotlineLabel">Hotline / Zalo</T></p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {SITE.phoneDisplay} ({SITE.contactPerson})
+                {SITE.phoneDisplay}
               </p>
             </div>
           </div>

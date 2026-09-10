@@ -4,17 +4,18 @@ export const SITE = {
   name: "Ô TÔ LƯỚT SÀI GÒN",
   fullName: "Ô TÔ LƯỚT SÀI GÒN",
   description:
-    "Showroom chuyên mua - bán - trao đổi ô tô lướt tại TP.HCM. Xe kiểm tra kỹ, rõ nguồn gốc, giấy tờ minh bạch. Hỗ trợ tư vấn chọn xe đúng nhu cầu, thủ tục nhanh gọn.",
+    "Chuyên trang xe cũ đảm bảo chất lượng, uy tín hàng đầu TP.HCM. Xe đẹp - giá tốt, pháp lý chuẩn chỉnh, hỗ trợ thủ tục sang tên, đổi xe tận tình, định giá chuẩn thị trường và giao xe nhanh gọn.",
   slogan: "Xe đẹp - Giá rẻ - Uy tín - Chất lượng",
   // Development fallback. Set NEXT_PUBLIC_SITE_URL to the production domain when deploying.
   url: "http://localhost:3000",
-  phone: "",
-  phoneDisplay: "  ",
+  phone: "0922549999",
+  phone2: "0926532222",
+  phoneDisplay: "0922 549 999 - 0926 532 222",
   contactPerson: "",
   email: "",
-  address: "TP. Hồ Chí Minh",
+  address: "1060 Nguyễn Ảnh Thủ, P. Trung Mỹ Tây, TP. Hồ Chí Minh",
   mapEmbedUrl:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3388.3844522279946!2d106.5963590743253!3d10.804014989346454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752b0035781ec7%3A0x9fd5e1dfe8dae7c8!2zQ2jhu6Mgw7QgVMO0IELDrG5oIFTDom4!5e1!3m2!1svi!2s!4v1775621528507!5m2!1svi!2s",
+    "https://www.google.com/maps?q=1060+Nguy%E1%BB%85n+%E1%BA%A2nh+Th%E1%BB%A7,+Trung+M%E1%BB%B9+T%C3%A2y,+TP.HCM&output=embed",
   facebook: "",
   zalo: "",
   tiktok1: "",
