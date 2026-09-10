@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Phone, Mail, Car, CarFront, Wrench, Newspaper, Building2, MessageSquare } from "lucide-react";
@@ -39,9 +40,13 @@ export function Header() {
       <div className="bg-accent text-accent-foreground">
         <div className="container-page flex h-14 items-center justify-between gap-4 md:h-16">
           <Link href="/" className="flex shrink-0 items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-display text-base font-bold text-primary-foreground md:h-10 md:w-10">
-              CB
-            </span>
+            <Image
+              src="/images/logo.png"
+              alt={site.name}
+              width={40}
+              height={40}
+              className="h-9 w-9 shrink-0 rounded-full object-cover md:h-10 md:w-10"
+            />
             <span className="font-display text-base font-extrabold uppercase leading-none tracking-tight md:text-xl">
               {site.name}
             </span>

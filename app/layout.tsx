@@ -36,6 +36,10 @@ export const metadata: Metadata = {
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
   keywords: [
     "ô tô lướt sài gòn",
     "ô tô cũ giá rẻ",
