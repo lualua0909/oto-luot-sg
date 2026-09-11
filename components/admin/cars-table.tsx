@@ -17,6 +17,7 @@ import {
 import { Car } from "@/lib/types";
 import { getAllCarsAdmin, deleteCar } from "@/lib/firebase/cars";
 import { formatPriceTrieu } from "@/lib/utils";
+import { deleteImage } from "@/lib/blob/storage";
 
 const STATUS_LABEL: Record<Car["status"], { label: string; variant: "success" | "secondary" | "outline" }> = {
   "dang-ban": { label: "Đang bán", variant: "success" },
@@ -48,6 +49,8 @@ export function CarsTable() {
     setDeleting(true);
     try {
       await deleteCar(toDelete.id);
+      const urls = new Set([...(toDelete.images ?? []).map((img) => img.url), toDelete.coverImage].filter(Boolean));
+      await Promise.all([...urls].map((url) => deleteImage(url)));
       toast.success("Đã xóa xe.");
       setCars((c) => c.filter((x) => x.id !== toDelete.id));
       setToDelete(null);
