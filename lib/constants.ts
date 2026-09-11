@@ -6,8 +6,8 @@ export const SITE = {
   description:
     "Chuyên trang xe cũ đảm bảo chất lượng, uy tín hàng đầu TP.HCM. Xe đẹp - giá tốt, pháp lý chuẩn chỉnh, hỗ trợ thủ tục sang tên, đổi xe tận tình, định giá chuẩn thị trường và giao xe nhanh gọn.",
   slogan: "Xe đẹp - Giá rẻ - Uy tín - Chất lượng",
-  // Development fallback. Set NEXT_PUBLIC_SITE_URL to the production domain when deploying.
-  url: "http://localhost:3000",
+  // Override with NEXT_PUBLIC_SITE_URL (e.g. http://localhost:3000 in development).
+  url: "https://otoluotsaigon.com",
   phone: "0922549999",
   phone2: "0969550995",
   phoneDisplay: "0922 54 9999 - 096 9550995",
@@ -17,7 +17,7 @@ export const SITE = {
   mapEmbedUrl:
     "https://www.google.com/maps?q=1060+Nguy%E1%BB%85n+%E1%BA%A2nh+Th%E1%BB%A7,+Trung+M%E1%BB%B9+T%C3%A2y,+TP.HCM&output=embed",
   facebook: "",
-  zalo: "",
+  zalo: "https://zalo.me/0922549999",
   tiktok1: "",
   tiktok2: "",
 };
@@ -68,6 +68,26 @@ export const BODY_TYPES: BodyType[] = [
   "Bán tải",
   "Van",
 ];
+
+export const CAR_COLORS = [
+  { name: "Trắng", hex: "#FFFFFF" },
+  { name: "Đỏ", hex: "#E63323" },
+  { name: "Cam", hex: "#F4A93B" },
+  { name: "Vàng", hex: "#FCE94F" },
+  { name: "Xanh lá", hex: "#5DAF5A" },
+  { name: "Xanh dương", hex: "#1433F5" },
+  { name: "Tím", hex: "#DE32F0" },
+  { name: "Hồng", hex: "#E8336E" },
+  { name: "Xám", hex: "#555555" },
+  { name: "Nâu", hex: "#5A3310" },
+  { name: "Bạc", hex: "#D6D6D6" },
+  { name: "Đen", hex: "#000000" },
+];
+
+export function getCarColorHex(name?: string) {
+  const key = name?.trim().toLowerCase();
+  return CAR_COLORS.find((c) => c.name.toLowerCase() === key)?.hex;
+}
 
 export const LEAD_TOPICS = [
   "Tư vấn mua xe",

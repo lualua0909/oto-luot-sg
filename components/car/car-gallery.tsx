@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { CarImage } from "@/lib/types";
@@ -18,6 +19,41 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
   const next = useCallback(() => {
     setActive((a) => (a + 1) % list.length);
   }, [list.length]);
+
+  const touchX = useRef<number | null>(null);
+  function onTouchStart(e: TouchEvent) {
+    touchX.current = e.touches[0].clientX;
+  }
+  function onTouchEnd(e: TouchEvent) {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) < 40 || list.length < 2) return;
+    if (dx > 0) prev();
+    else next();
+  }
+
+  // Mobile carousel: native scroll-snap track, kept in sync with `active`.
+  const trackRef = useRef<HTMLDivElement>(null);
+  const autoScrolling = useRef(false);
+  function onTrackScroll() {
+    const el = trackRef.current;
+    if (!el || !el.clientWidth || autoScrolling.current) return;
+    setActive(Math.round(el.scrollLeft / el.clientWidth));
+  }
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el || !el.clientWidth) return;
+    const target = active * el.clientWidth;
+    if (Math.abs(el.scrollLeft - target) <= 1) return;
+    autoScrolling.current = true;
+    el.scrollTo({ left: target, behavior: "smooth" });
+    const t = setTimeout(() => (autoScrolling.current = false), 500);
+    return () => {
+      clearTimeout(t);
+      autoScrolling.current = false;
+    };
+  }, [active]);
 
   function openZoom(index: number) {
     if (!list[index]?.url) return;
@@ -45,21 +81,31 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted sm:hidden">
-        {list[active]?.url ? (
-          <Image
-            onClick={() => openZoom(active)}
-            alt={`${title} - ảnh ${active + 1}`}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className="cursor-zoom-in object-cover"
-            src={list[active].url}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-            <T id="car.gallery.noImage">Chưa có ảnh</T>
-          </div>
-        )}
+        <div
+          ref={trackRef}
+          onScroll={onTrackScroll}
+          className="flex h-full w-full snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {list.map((img, index) => (
+            <div key={img.path || index} className="relative h-full w-full shrink-0 snap-center">
+              {img.url ? (
+                <Image
+                  onClick={() => openZoom(index)}
+                  alt={`${title} - ảnh ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  sizes="100vw"
+                  className="cursor-zoom-in object-cover"
+                  src={img.url}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                  <T id="car.gallery.noImage">Chưa có ảnh</T>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
 
         {list.length > 1 && (
           <>
@@ -111,23 +157,28 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
         {list.length === 1 && <div className="col-span-2 row-span-2 bg-muted" />}
       </div>
 
-      {zoomed && (
+      {zoomed && createPortal(
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`${title} - ảnh phóng to`}
           onClick={() => setZoomed(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
         >
           <button
             onClick={() => setZoomed(false)}
             aria-label="Đóng"
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
+            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="relative h-full w-full" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative h-full w-full touch-pan-y"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
             {list[active]?.url && (
               <Image
                 src={list[active].url}
@@ -147,7 +198,7 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
                   prev();
                 }}
                 aria-label="Ảnh trước"
-                className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
+                className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
               >
                 <ChevronLeft className="h-6 w-6" />
               </button>
@@ -157,16 +208,17 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
                   next();
                 }}
                 aria-label="Ảnh sau"
-                className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
+                className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow hover:bg-white"
               >
                 <ChevronRight className="h-6 w-6" />
               </button>
-              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-sm font-medium text-white">
+              <div className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-sm font-medium text-white">
                 {active + 1}/{list.length}
               </div>
             </>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

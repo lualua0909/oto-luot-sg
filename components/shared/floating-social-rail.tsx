@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 
-function ZaloIcon({ className }: { className?: string }) {
+export function ZaloIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 48 48" fill="currentColor" className={className} aria-hidden>
       <path d="M24 6C13.5 6 5 13.4 5 22.5c0 5.2 2.8 9.8 7.2 12.8-.3 1.2-1.1 3.6-2.7 5.4-.4.5 0 1.2.6 1.1 3.4-.6 6.2-2.1 7.9-3.2 1.9.5 3.9.8 6 .8 10.5 0 19-7.4 19-16.5S34.5 6 24 6Z" />

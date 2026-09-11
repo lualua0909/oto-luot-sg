@@ -8,7 +8,7 @@ import { CarSpecs } from "@/components/car/car-specs";
 import { CarContactCard } from "@/components/car/car-contact-card";
 import { CarCard } from "@/components/car/car-card";
 import { Badge } from "@/components/ui/badge";
-import { SITE } from "@/lib/constants";
+import { SITE, getCarColorHex } from "@/lib/constants";
 import { formatPriceTrieu } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
 
@@ -35,6 +35,11 @@ export default async function CarDetailPage({ params }: { params: { slug: string
   const related = (await getCarsByBrand(car.brand).catch(() => []))
     .filter((c) => c.id !== car.id)
     .slice(0, 4);
+
+  const colorHex = getCarColorHex(car.color);
+  const cardStyle = colorHex
+    ? ({ borderColor: colorHex, borderWidth: 2, "--car-shadow": `${colorHex}55`, "--car-shadow-hover": `${colorHex}99` } as React.CSSProperties)
+    : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -70,7 +75,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
 
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
           <div className="space-y-5">
-            <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+            <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-6px_var(--car-shadow,rgba(20,30,45,0.12))] hover:shadow-[0_14px_36px_-8px_var(--car-shadow-hover,rgba(20,30,45,0.25))] transition-shadow duration-300 sm:p-6" style={cardStyle}>
               <div className="flex flex-wrap items-center gap-2">
                 {car.isVerified && (
                   <Badge variant="success">
@@ -91,13 +96,13 @@ export default async function CarDetailPage({ params }: { params: { slug: string
               </div>
             </section>
 
-            <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+            <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-6px_var(--car-shadow,rgba(20,30,45,0.12))] hover:shadow-[0_14px_36px_-8px_var(--car-shadow-hover,rgba(20,30,45,0.25))] transition-shadow duration-300 sm:p-6" style={cardStyle}>
               <h2 className="mb-4 font-display text-lg font-semibold"><T id="car.detail.specsTitle">Thông số xe</T></h2>
               <CarSpecs car={car} />
             </section>
 
             {car.highlights?.length > 0 && (
-              <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+              <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-6px_var(--car-shadow,rgba(20,30,45,0.12))] hover:shadow-[0_14px_36px_-8px_var(--car-shadow-hover,rgba(20,30,45,0.25))] transition-shadow duration-300 sm:p-6" style={cardStyle}>
                 <h2 className="mb-4 font-display text-lg font-semibold"><T id="car.detail.highlightsTitle">Điểm nổi bật</T></h2>
                 <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {car.highlights.map((h, i) => (
@@ -109,7 +114,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
               </section>
             )}
 
-            <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+            <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-6px_var(--car-shadow,rgba(20,30,45,0.12))] hover:shadow-[0_14px_36px_-8px_var(--car-shadow-hover,rgba(20,30,45,0.25))] transition-shadow duration-300 sm:p-6" style={cardStyle}>
               <h2 className="mb-4 font-display text-lg font-semibold"><T id="car.detail.descriptionTitle">Mô tả chi tiết</T></h2>
               <p className="whitespace-pre-line leading-7 text-foreground/85">{car.description || "Showroom đang cập nhật thêm thông tin chi tiết về xe này."}</p>
             </section>

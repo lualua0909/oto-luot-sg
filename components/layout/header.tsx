@@ -75,7 +75,7 @@ export function Header() {
       <div className="container-page flex h-16 items-center gap-3">
         <Button
           variant="accent"
-          className="shrink-0 gap-2 rounded-lg px-4 font-bold uppercase"
+          className="shrink-0 gap-2 rounded-lg px-4 font-bold uppercase lg:hidden"
           onClick={() => setOpen(true)}
           aria-label="Mở danh mục"
         >
@@ -177,9 +177,9 @@ export function Header() {
                 </div>
               </nav>
               <div className="mt-auto p-4">
-                <Button asChild variant="accent" size="lg" className="w-full">
+                <Button asChild variant="accent" size="lg" className="h-auto w-full whitespace-normal py-3 text-center leading-snug">
                   <a href={`tel:${site.phone}`}>
-                    <Phone className="h-4 w-4" /> <T id="header.callNowMobile">Gọi ngay</T>: {site.phoneDisplay}
+                    <Phone className="h-4 w-4 shrink-0" /> <T id="header.callNowMobile">Gọi ngay</T>: {site.phoneDisplay}
                   </a>
                 </Button>
               </div>

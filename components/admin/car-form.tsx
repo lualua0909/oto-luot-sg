@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ImageUploader } from "@/components/admin/image-uploader";
-import { BODY_TYPES, BRANDS } from "@/lib/constants";
+import { BODY_TYPES, BRANDS, CAR_COLORS } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
 import { Car, CarImage } from "@/lib/types";
 import { CarInput, createCar, updateCar } from "@/lib/firebase/cars";
@@ -25,6 +25,9 @@ export function CarForm({ car }: { car?: Car }) {
   const [transmission, setTransmission] = useState<Car["transmission"]>(car?.transmission ?? "Số tự động");
   const [fuel, setFuel] = useState<Car["fuel"]>(car?.fuel ?? "Xăng");
   const [status, setStatus] = useState<Car["status"]>(car?.status ?? "dang-ban");
+  const [color, setColor] = useState(
+    CAR_COLORS.find((c) => c.name.toLowerCase() === car?.color?.trim().toLowerCase())?.name ?? car?.color ?? "",
+  );
   const [images, setImages] = useState<CarImage[]>(car?.images ?? []);
   const [coverImage, setCoverImage] = useState(car?.coverImage ?? "");
   const [isFeatured, setIsFeatured] = useState(car?.isFeatured ?? false);
@@ -185,7 +188,30 @@ export function CarForm({ car }: { car?: Car }) {
 
         <div className="space-y-1.5">
           <Label htmlFor="color">Màu xe</Label>
-          <Input id="color" name="color" defaultValue={car?.color} placeholder="Trắng" />
+          <input type="hidden" name="color" value={color.trim()} />
+          <div className="flex flex-wrap gap-2">
+            {CAR_COLORS.map((c) => {
+              const selected = c.name === color;
+              return (
+                <button
+                  key={c.name}
+                  type="button"
+                  title={c.name}
+                  aria-label={c.name}
+                  aria-pressed={selected}
+                  onClick={() => setColor(selected ? "" : c.name)}
+                  className={`h-8 w-8 rounded-full border border-border transition ${selected ? "ring-2 ring-primary ring-offset-2" : "hover:scale-110"}`}
+                  style={{ backgroundColor: c.hex }}
+                />
+              );
+            })}
+          </div>
+          <Input
+            id="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            placeholder="Chọn màu ở trên hoặc gõ tay, VD: Xanh rêu"
+          />
         </div>
 
         <div className="space-y-1.5">

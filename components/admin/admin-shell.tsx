@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -10,6 +11,7 @@ import {
   MessageSquare,
   Settings,
   Tags,
+  Images,
   LogOut,
   Menu,
   ExternalLink,
@@ -26,6 +28,7 @@ const NAV = [
   { href: "/admin/lien-he", label: "Yêu cầu tư vấn", icon: MessageSquare },
   { href: "/admin/cai-dat", label: "Cài đặt showroom", icon: Settings },
   { href: "/admin/thuong-hieu", label: "Hãng xe & logo", icon: Tags },
+  { href: "/admin/file", label: "Quản lý file", icon: Images },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -42,9 +45,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const sidebarContent = (
     <>
       <div className="flex h-16 items-center gap-2 border-b border-border px-5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-primary-foreground">
-          CB
-        </span>
+        <Image src="/images/logo.png" alt={SITE.name} width={60} height={32} className="h-9 w-auto shrink-0 object-contain" />
         <span className="font-display text-sm font-bold">Quản trị {SITE.name}</span>
       </div>
 

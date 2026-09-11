@@ -25,7 +25,11 @@ export const DEFAULT_SHOWROOM_SETTINGS: ShowroomSettings = {
 const settingsRef = doc(db, "settings", SHOWROOM_SETTINGS_ID);
 
 function parseSettings(data?: Record<string, unknown>): ShowroomSettings {
-  return { ...DEFAULT_SHOWROOM_SETTINGS, ...(data ?? {}) } as ShowroomSettings;
+  // Empty values saved from admin must not wipe out the defaults.
+  const filled = Object.fromEntries(
+    Object.entries(data ?? {}).filter(([, value]) => value !== "" && value != null)
+  );
+  return { ...DEFAULT_SHOWROOM_SETTINGS, ...filled } as ShowroomSettings;
 }
 
 export async function getShowroomSettings(): Promise<ShowroomSettings> {

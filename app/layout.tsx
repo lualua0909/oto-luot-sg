@@ -55,7 +55,6 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} | ${SITE.slogan}`,
     description: SITE.description,
-    images: ["/images/og-cover.jpg"],
   },
   twitter: {
     card: "summary_large_image",

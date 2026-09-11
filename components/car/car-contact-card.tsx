@@ -2,7 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Phone, MessageCircle, Loader2, ShieldCheck } from "lucide-react";
+import CountUp from "react-countup";
+import { Phone, Loader2, ShieldCheck } from "lucide-react";
+import { ZaloIcon } from "@/components/shared/floating-social-rail";
+import { getCarColorHex } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +15,16 @@ import { formatPriceTrieu } from "@/lib/utils";
 import { Car } from "@/lib/types";
 import { T } from "@/components/shared/editable-text";
 
+function isLight(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return 0.299 * r + 0.587 * g + 0.114 * b > 160;
+}
+
 export function CarContactCard({ car }: { car: Car }) {
   const [loading, setLoading] = useState(false);
   const site = useShowroomSettings();
+  const colorHex = getCarColorHex(car.color);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,23 +56,46 @@ export function CarContactCard({ car }: { car: Car }) {
   }
 
   return (
-    <Card className="overflow-hidden border-border shadow-card lg:sticky lg:top-24">
+    <Card
+      className="overflow-hidden border-border shadow-[0_4px_16px_-6px_var(--car-shadow,rgba(20,30,45,0.12))] hover:shadow-[0_14px_36px_-8px_var(--car-shadow-hover,rgba(20,30,45,0.25))] transition-shadow duration-300 lg:sticky lg:top-24"
+      style={
+        colorHex
+          ? ({ borderColor: colorHex, borderWidth: 2, "--car-shadow": `${colorHex}55`, "--car-shadow-hover": `${colorHex}99` } as React.CSSProperties)
+          : undefined
+      }
+    >
       <CardHeader className="border-b border-border">
         <p className="text-xs text-muted-foreground">
           <T id="car.contact.priceLabel">Giá bán</T>
         </p>
-        <CardTitle className="text-2xl text-accent">{formatPriceTrieu(car.priceTrieu)}</CardTitle>
+        <CardTitle className="text-2xl text-accent">
+          {car.priceTrieu ? (
+            <CountUp end={car.priceTrieu} duration={1} separator="." decimal="," decimals={Number.isInteger(car.priceTrieu) ? 0 : 1} suffix=" triệu" />
+          ) : (
+            formatPriceTrieu(car.priceTrieu)
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-5">
         <div className="grid grid-cols-2 gap-2.5">
-          <Button asChild variant="accent" size="lg">
+          <Button
+            asChild
+            variant="accent"
+            size="lg"
+            className="shadow-md transition-shadow hover:shadow-lg"
+            style={
+              colorHex
+                ? { backgroundColor: colorHex, borderColor: colorHex, borderWidth: 2, color: isLight(colorHex) ? "#111827" : "#FFFFFF" }
+                : undefined
+            }
+          >
             <a href={`tel:${site.phone}`}>
               <Phone className="h-4 w-4" /> <T id="car.contact.call">Gọi ngay</T>
             </a>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="shadow-sm transition-shadow hover:shadow-md">
             <a href={site.zalo} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-4 w-4" /> <T id="car.contact.zalo">Chat Zalo</T>
+              <ZaloIcon className="h-5 w-5 text-[#0068FF]" /> <T id="car.contact.zalo">Chat Zalo</T>
             </a>
           </Button>
         </div>
