@@ -84,9 +84,9 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
         )}
       </div>
 
-      <div className="hidden h-[440px] grid-cols-4 gap-1 bg-background sm:grid">
-        <button type="button" onClick={() => openZoom(0)} className="relative col-span-3 row-span-2 cursor-zoom-in overflow-hidden bg-muted">
-          {list[0]?.url ? <Image src={list[0].url} alt={`${title} - ảnh 1`} fill priority sizes="(max-width: 1024px) 75vw, 65vw" className="object-cover transition-transform duration-300 hover:scale-[1.02]" /> : <div className="flex h-full items-center justify-center text-sm text-muted-foreground"><T id="car.gallery.noImage">Chưa có ảnh</T></div>}
+      <div className="hidden h-[440px] grid-cols-4 grid-rows-2 gap-1 bg-background sm:grid">
+        <button type="button" onClick={() => openZoom(0)} className="relative col-span-2 row-span-2 cursor-zoom-in overflow-hidden bg-muted">
+          {list[0]?.url ? <Image src={list[0].url} alt={`${title} - ảnh 1`} fill priority sizes="(max-width: 1024px) 50vw, 45vw" className="object-cover transition-transform duration-300 hover:scale-[1.02]" /> : <div className="flex h-full items-center justify-center text-sm text-muted-foreground"><T id="car.gallery.noImage">Chưa có ảnh</T></div>}
         </button>
         {list.slice(1, 5).map((img, index) => {
           const imageIndex = index + 1;
@@ -108,7 +108,7 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
             </button>
           );
         })}
-        {list.length === 1 && <div className="bg-muted" />}
+        {list.length === 1 && <div className="col-span-2 row-span-2 bg-muted" />}
       </div>
 
       {zoomed && (
