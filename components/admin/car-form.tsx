@@ -12,12 +12,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { BODY_TYPES, BRANDS, CAR_COLORS } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
+import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { Car, CarImage } from "@/lib/types";
 import { CarInput, createCar, updateCar } from "@/lib/firebase/cars";
 
 export function CarForm({ car }: { car?: Car }) {
   const router = useRouter();
   const brands = useBrands();
+  const showroomSettings = useShowroomSettings();
   const isEdit = !!car;
 
   const [brand, setBrand] = useState(car?.brand ?? BRANDS[0].slug);
@@ -224,7 +226,7 @@ export function CarForm({ car }: { car?: Car }) {
           <Input
             id="location"
             name="location"
-            defaultValue={car?.location ?? "507 Lê Đức Anh, Khu phố 16, Phường Bình Hưng Hòa, TP Hồ Chí Minh"}
+            defaultValue={car?.location ?? showroomSettings.address}
           />
         </div>
       </section>

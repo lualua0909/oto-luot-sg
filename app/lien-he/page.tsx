@@ -2,15 +2,19 @@ import type { Metadata } from "next";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { LeadForm } from "@/components/home/lead-form";
-import { SITE } from "@/lib/constants";
+import { getShowroomSettings } from "@/lib/firebase/settings";
 import { T } from "@/components/shared/editable-text";
 
-export const metadata: Metadata = {
-  title: "Liên hệ",
-  description: `Liên hệ ${SITE.fullName} — hotline ${SITE.phoneDisplay}, địa chỉ ${SITE.address}.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getShowroomSettings();
+  return {
+    title: "Liên hệ",
+    description: `Liên hệ ${site.fullName} — hotline ${site.phoneDisplay}, địa chỉ ${site.address}.`,
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getShowroomSettings();
   return (
     <div>
       <div className="container-page py-10">
@@ -26,7 +30,7 @@ export default function ContactPage() {
             <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <div>
               <p className="text-sm font-semibold"><T id="contact.addressLabel">Địa chỉ showroom</T></p>
-              <p className="mt-1 text-sm text-muted-foreground">{SITE.address}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{site.address}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
@@ -34,7 +38,7 @@ export default function ContactPage() {
             <div>
               <p className="text-sm font-semibold"><T id="contact.hotlineLabel">Hotline / Zalo</T></p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {SITE.phoneDisplay}
+                {site.phoneDisplay}
               </p>
             </div>
           </div>
@@ -51,7 +55,7 @@ export default function ContactPage() {
 
         <div className="mt-6 overflow-hidden rounded-xl border border-border shadow-card">
           <iframe
-            src={SITE.mapEmbedUrl}
+            src={site.mapEmbedUrl}
             className="h-80 w-full"
             loading="lazy"
             title="Bản đồ showroom Ô TÔ LƯỚT SÀI GÒN"

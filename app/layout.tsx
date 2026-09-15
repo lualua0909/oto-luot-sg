@@ -12,6 +12,7 @@ import { BrandsProvider } from "@/components/shared/brands-provider";
 import { ContentProvider } from "@/components/shared/content-provider";
 import { AuthProvider } from "@/lib/firebase/auth-context";
 import { getContentTexts } from "@/lib/firebase/content";
+import { getShowroomSettings } from "@/lib/firebase/settings";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -66,6 +67,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const contentTexts = await getContentTexts().catch(() => ({}));
+  const showroomSettings = await getShowroomSettings().catch(() => null);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -78,7 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     image: `${SITE.url}/images/og-cover.jpg`,
     address: {
       "@type": "PostalAddress",
-      streetAddress: SITE.address,
+      streetAddress: showroomSettings?.address ?? SITE.address,
       addressLocality: "Hồ Chí Minh",
       addressCountry: "VN",
     },

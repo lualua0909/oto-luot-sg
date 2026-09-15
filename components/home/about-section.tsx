@@ -1,11 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
+import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { T } from "@/components/shared/editable-text";
 
 export function AboutSection() {
+  const site = useShowroomSettings();
   return (
     <section className="container-page grid grid-cols-1 items-center gap-10 py-14 md:grid-cols-2">
       <div className="relative order-2 aspect-[4/3] overflow-hidden rounded-2xl shadow-card md:order-1">
@@ -30,7 +34,7 @@ export function AboutSection() {
 
         <div className="mt-5 flex items-center gap-2.5 text-sm">
           <MapPin className="h-4 w-4 shrink-0 text-primary" />
-          <span>{SITE.address}</span>
+          <span>{site.address}</span>
         </div>
         <div className="mt-2 flex items-center gap-2.5 text-sm">
           <Phone className="h-4 w-4 shrink-0 text-primary" />
