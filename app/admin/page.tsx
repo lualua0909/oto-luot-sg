@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getAllCarsAdmin } from "@/lib/firebase/cars";
 import { getAllNewsAdmin } from "@/lib/firebase/news";
 import { getAllLeadsAdmin } from "@/lib/firebase/leads";
+import { AnalyticsPanel } from "@/components/admin/analytics-panel";
 
 export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
@@ -81,6 +82,8 @@ export default function AdminDashboardPage() {
           </Link>
         ))}
       </div>
+
+      <AnalyticsPanel />
     </div>
   );
 }
