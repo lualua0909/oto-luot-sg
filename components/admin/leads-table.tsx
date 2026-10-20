@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trash2, Phone } from "lucide-react";
+import { Eye, Trash2, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,6 +21,7 @@ const STATUS_OPTIONS: { value: Lead["status"]; label: string; variant: "secondar
 export function LeadsTable() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -89,9 +90,21 @@ export function LeadsTable() {
                   </a>
                 </TableCell>
                 <TableCell className="text-sm">{lead.topic}</TableCell>
-                <TableCell className="max-w-[220px] text-sm text-muted-foreground">
-                  <p className="line-clamp-2">{lead.message || "—"}</p>
+                <TableCell className="max-w-[280px] text-sm text-muted-foreground">
+                  <p className="line-clamp-2 break-words">{lead.message || "—"}</p>
                   {lead.carTitle && <p className="mt-0.5 text-xs text-primary">Xe: {lead.carTitle}</p>}
+                  {lead.message && (
+                    <Button
+                      type="button"
+                      variant="link"
+                      size="sm"
+                      className="mt-1 h-auto p-0 text-xs"
+                      onClick={() => setSelectedLead(lead)}
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      Xem đầy đủ
+                    </Button>
+                  )}
                 </TableCell>
                 <TableCell className="text-sm">{formatDate(lead.createdAt)}</TableCell>
                 <TableCell>
@@ -116,6 +129,48 @@ export function LeadsTable() {
           </TableBody>
         </Table>
       )}
+
+      <Dialog open={!!selectedLead} onOpenChange={(open) => !open && setSelectedLead(null)}>
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Nội dung yêu cầu tư vấn</DialogTitle>
+          </DialogHeader>
+          {selectedLead && (
+            <div className="space-y-4 text-sm">
+              <div className="grid gap-3 rounded-lg bg-muted/60 p-4 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">Khách hàng</p>
+                  <p className="font-medium">{selectedLead.name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Số điện thoại</p>
+                  <a href={`tel:${selectedLead.phone}`} className="font-medium text-primary hover:underline">
+                    {selectedLead.phone}
+                  </a>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Chủ đề</p>
+                  <p className="font-medium">{selectedLead.topic}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Ngày gửi</p>
+                  <p className="font-medium">{formatDate(selectedLead.createdAt)}</p>
+                </div>
+                {selectedLead.carTitle && (
+                  <div className="sm:col-span-2">
+                    <p className="text-xs text-muted-foreground">Xe quan tâm</p>
+                    <p className="font-medium text-primary">{selectedLead.carTitle}</p>
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">Nội dung</p>
+                <p className="whitespace-pre-wrap break-words [overflow-wrap:anywhere]">{selectedLead.message}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
