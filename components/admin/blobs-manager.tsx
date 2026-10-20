@@ -107,9 +107,12 @@ export function BlobsManager() {
   });
   const unusedCount = blobs.filter((b) => !usage.has(b.url)).length;
 
-  const allVisibleSelected = visible.length > 0 && visible.every((b) => selected.has(b.url));
+  const selectableVisible = visible.filter((b) => !usage.has(b.url));
+  const allVisibleSelected =
+    selectableVisible.length > 0 && selectableVisible.every((b) => selected.has(b.url));
 
   function toggleSelect(url: string) {
+    if (usage.has(url)) return;
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(url)) next.delete(url);
@@ -121,29 +124,32 @@ export function BlobsManager() {
   function toggleSelectAll() {
     setSelected((prev) => {
       const next = new Set(prev);
-      visible.forEach((b) => (allVisibleSelected ? next.delete(b.url) : next.add(b.url)));
+      selectableVisible.forEach((b) =>
+        allVisibleSelected ? next.delete(b.url) : next.add(b.url)
+      );
       return next;
     });
   }
 
   async function confirmDelete() {
     if (!toDelete) return;
+    const safeToDelete = toDelete.filter((blob) => !usage.has(blob.url));
+    if (safeToDelete.length !== toDelete.length) {
+      toast.error("Không thể xóa file đang được sử dụng.");
+      setToDelete(null);
+      return;
+    }
     setDeleting(true);
     const results = await Promise.allSettled(
-      toDelete.map(async (blob) => {
-        const res = await fetch("/api/upload/delete", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: blob.url }),
-        });
-        if (!res.ok) throw new Error();
+      safeToDelete.map(async (blob) => {
+        await deleteImage(blob.url);
         return blob.url;
       })
     );
     const deleted = new Set(
       results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []))
     );
-    const failed = toDelete.length - deleted.size;
+    const failed = safeToDelete.length - deleted.size;
     setBlobs((list) => list.filter((b) => !deleted.has(b.url)));
     setSelected((prev) => new Set([...prev].filter((url) => !deleted.has(url))));
     if (deleted.size) toast.success(`Đã xóa ${deleted.size} file.`);
@@ -180,17 +186,21 @@ export function BlobsManager() {
           .map((brand) => saveBrand({ ...brand, logoUrl: next.url })),
       ]);
 
-      await deleteImage(old.url);
+      await deleteImage(old.url).catch(() => {
+        // The replacement is already referenced safely; the old file can be
+        // removed later from the unused-files filter.
+      });
       toast.success("Đã thay file.");
       await load();
-    } catch {
-      toast.error("Thay file thất bại, vui lòng thử lại.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
+      toast.error(message.includes("nén ảnh") || message.includes("WebP") || message.includes("xử lý ảnh")
+        ? message
+        : "Thay file thất bại, vui lòng thử lại.");
     } finally {
       setBusyUrl(null);
     }
   }
-
-  const deleteUsage = toDelete?.flatMap((b) => usage.get(b.url) ?? []) ?? [];
 
   return (
     <div>
@@ -275,8 +285,9 @@ export function BlobsManager() {
                       type="checkbox"
                       className="h-4 w-4 accent-primary"
                       checked={selected.has(blob.url)}
+                      disabled={Boolean(used)}
                       onChange={() => toggleSelect(blob.url)}
-                      aria-label="Chọn file"
+                      aria-label={used ? "File đang được sử dụng" : "Chọn file"}
                     />
                   </TableCell>
                   <TableCell>
@@ -319,7 +330,7 @@ export function BlobsManager() {
                       >
                         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Replace className="h-4 w-4" />}
                       </Button>
-                      <Button size="icon" variant="outline" disabled={busy} onClick={() => setToDelete([blob])} aria-label="Xóa">
+                      <Button size="icon" variant="outline" disabled={busy || Boolean(used)} onClick={() => setToDelete([blob])} aria-label={used ? "Không thể xóa file đang dùng" : "Xóa"}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
@@ -338,13 +349,7 @@ export function BlobsManager() {
               {toDelete && toDelete.length > 1 ? `Xóa ${toDelete.length} file?` : "Xóa file này?"}
             </DialogTitle>
           </DialogHeader>
-          {deleteUsage.length > 0 ? (
-            <p className="text-sm text-destructive">
-              File đang được dùng ở: {[...new Set(deleteUsage)].join(", ")}. Xóa sẽ làm ảnh bị lỗi ở những nơi này.
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground">File không được sử dụng. Hành động này không thể hoàn tác.</p>
-          )}
+          <p className="text-sm text-muted-foreground">File không được sử dụng. Hành động này không thể hoàn tác.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setToDelete(null)}>Hủy</Button>
             <Button variant="destructive" onClick={confirmDelete} disabled={deleting}>

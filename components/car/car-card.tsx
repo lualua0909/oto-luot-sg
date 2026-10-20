@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, Fuel, Gauge, MapPin, Settings2 } from "lucide-react";
 import { Car } from "@/lib/types";
@@ -6,19 +5,25 @@ import { Badge } from "@/components/ui/badge";
 import { formatPriceTrieu } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 import { T } from "@/components/shared/editable-text";
+import { ResilientCarImage } from "@/components/car/resilient-car-image";
 
 export function CarCard({ car }: { car: Car }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl">
       <Link href={`/xe/${car.slug}`} className="contents">
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-          {car.coverImage ? (
-            <Image
-              src={car.coverImage}
+          {car.coverImage || car.images?.length ? (
+            <ResilientCarImage
+              sources={[car.coverImage, ...(car.images ?? []).map((image) => image.url)]}
               alt={car.title}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              fallback={
+                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                  <T id="car.card.noImage">Chưa có ảnh</T>
+                </div>
+              }
             />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">

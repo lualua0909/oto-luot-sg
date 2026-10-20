@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Car } from "@/lib/types";
 import { formatPriceTrieu } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
+import { ResilientCarImage } from "@/components/car/resilient-car-image";
 
 const ALL = "Tất cả";
 
@@ -17,13 +17,18 @@ function CarSlide({ car }: { car: Car }) {
       className="group w-[248px] shrink-0 snap-start overflow-hidden rounded-xl bg-card shadow-lg transition-transform duration-200 hover:-translate-y-1 sm:w-[268px]"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-        {car.coverImage ? (
-          <Image
-            src={car.coverImage}
+        {car.coverImage || car.images?.length ? (
+          <ResilientCarImage
+            sources={[car.coverImage, ...(car.images ?? []).map((image) => image.url)]}
             alt={car.title}
             fill
             sizes="270px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
+            fallback={
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                <T id="car.card.noImage">Chưa có ảnh</T>
+              </div>
+            }
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">

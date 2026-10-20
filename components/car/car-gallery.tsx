@@ -2,16 +2,31 @@
 
 import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import { CarImage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
+import { ResilientCarImage } from "@/components/car/resilient-car-image";
 
 export function CarGallery({ images, title }: { images: CarImage[]; title: string }) {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(false);
-  const list = images.length > 0 ? images : [{ url: "", path: "" }];
+  const [failedUrls, setFailedUrls] = useState<Set<string>>(() => new Set());
+  const availableImages = images.filter((image) => image.url && !failedUrls.has(image.url));
+  const list = availableImages.length > 0 ? availableImages : [{ url: "", path: "" }];
+
+  const markFailed = useCallback((url: string) => {
+    setFailedUrls((current) => {
+      if (current.has(url)) return current;
+      const nextFailed = new Set(current);
+      nextFailed.add(url);
+      return nextFailed;
+    });
+  }, []);
+
+  useEffect(() => {
+    setActive((current) => Math.min(current, list.length - 1));
+  }, [list.length]);
 
   const prev = useCallback(() => {
     setActive((a) => (a - 1 + list.length) % list.length);
@@ -89,14 +104,15 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
           {list.map((img, index) => (
             <div key={img.path || index} className="relative h-full w-full shrink-0 snap-center">
               {img.url ? (
-                <Image
+                <ResilientCarImage
+                  sources={[img.url]}
                   onClick={() => openZoom(index)}
                   alt={`${title} - ảnh ${index + 1}`}
                   fill
                   priority={index === 0}
                   sizes="100vw"
                   className="cursor-zoom-in object-cover"
-                  src={img.url}
+                  onAllSourcesFailed={() => markFailed(img.url)}
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -132,7 +148,7 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
 
       <div className="hidden h-[440px] grid-cols-4 grid-rows-2 gap-1 bg-background sm:grid">
         <button type="button" onClick={() => openZoom(0)} className="relative col-span-2 row-span-2 cursor-zoom-in overflow-hidden bg-muted">
-          {list[0]?.url ? <Image src={list[0].url} alt={`${title} - ảnh 1`} fill priority sizes="(max-width: 1024px) 50vw, 45vw" className="object-cover transition-transform duration-300 hover:scale-[1.02]" /> : <div className="flex h-full items-center justify-center text-sm text-muted-foreground"><T id="car.gallery.noImage">Chưa có ảnh</T></div>}
+          {list[0]?.url ? <ResilientCarImage sources={[list[0].url]} alt={`${title} - ảnh 1`} fill priority sizes="(max-width: 1024px) 50vw, 45vw" className="object-cover transition-transform duration-300 hover:scale-[1.02]" onAllSourcesFailed={() => markFailed(list[0].url)} /> : <div className="flex h-full items-center justify-center text-sm text-muted-foreground"><T id="car.gallery.noImage">Chưa có ảnh</T></div>}
         </button>
         {list.slice(1, 5).map((img, index) => {
           const imageIndex = index + 1;
@@ -147,7 +163,7 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
                 imageIndex === active && "ring-2 ring-inset ring-primary"
               )}
             >
-              {img.url && <Image src={img.url} alt="" fill sizes="20vw" className="object-cover transition-transform duration-300 hover:scale-105" />}
+              {img.url && <ResilientCarImage sources={[img.url]} alt="" fill sizes="20vw" className="object-cover transition-transform duration-300 hover:scale-105" onAllSourcesFailed={() => markFailed(img.url)} />}
               {isLastVisible && (
                 <span className="absolute inset-0 flex items-center justify-center gap-1 bg-black/55 text-sm font-semibold text-white"><Images className="h-4 w-4" /> +{list.length - 5}</span>
               )}
@@ -180,12 +196,13 @@ export function CarGallery({ images, title }: { images: CarImage[]; title: strin
             onTouchEnd={onTouchEnd}
           >
             {list[active]?.url && (
-              <Image
-                src={list[active].url}
+              <ResilientCarImage
+                sources={[list[active].url]}
                 alt={`${title} - ảnh ${active + 1}`}
                 fill
                 sizes="100vw"
                 className="object-contain"
+                onAllSourcesFailed={() => markFailed(list[active].url)}
               />
             )}
           </div>

@@ -51,6 +51,10 @@ export function CarForm({ car }: { car?: Car }) {
 
     const brandName = brands.find((b) => b.slug === brand)?.name ?? brand;
 
+    const validCoverImage = images.some((image) => image.url === coverImage)
+      ? coverImage
+      : images[0]?.url ?? "";
+
     const input: CarInput = {
       title,
       brand,
@@ -71,7 +75,7 @@ export function CarForm({ car }: { car?: Car }) {
         .map((h) => h.trim())
         .filter(Boolean),
       images,
-      coverImage: coverImage || images[0]?.url || "",
+      coverImage: validCoverImage,
       isFeatured,
       isVerified,
       status,

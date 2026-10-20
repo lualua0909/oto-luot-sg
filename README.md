@@ -98,6 +98,7 @@ storage.rules             Luật bảo mật Storage — dán vào Firebase Cons
 ```
 
 ## Ghi chú
+- Ảnh xe tải lên từ trang quản trị được gửi vào `staging/cars/`, rồi server nén bằng Sharp thành WebP **tối đa 80 KiB**, cạnh dài **tối đa 1920 px**. Server chỉ trả URL `cars/` sau khi đã kiểm tra ảnh đầu ra. Cấu hình nằm trong `lib/blob/server-webp.ts`; ảnh gốc tạm được xóa sau khi xử lý thành công. Giới hạn ảnh gốc là 20 MB.
 - Ảnh minh họa ở trang chủ (`/public/images/hero-car-*.jpg`, `about-*.jpg`) là **placeholder** —
   hãy thay bằng ảnh xe/showroom thật của bạn (cùng tên file, hoặc đổi đường dẫn trong
   `components/home/hero.tsx` và `about-section.tsx`).

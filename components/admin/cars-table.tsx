@@ -50,7 +50,9 @@ export function CarsTable() {
     try {
       await deleteCar(toDelete.id);
       const urls = new Set([...(toDelete.images ?? []).map((img) => img.url), toDelete.coverImage].filter(Boolean));
-      await Promise.all([...urls].map((url) => deleteImage(url)));
+      // The car record is the important deletion. Blob cleanup is best effort;
+      // any failed file remains visible in the unused-files manager.
+      await Promise.allSettled([...urls].map((url) => deleteImage(url)));
       toast.success("Đã xóa xe.");
       setCars((c) => c.filter((x) => x.id !== toDelete.id));
       setToDelete(null);

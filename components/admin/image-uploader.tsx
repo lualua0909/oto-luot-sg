@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Loader2, Star, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { CarImage } from "@/lib/types";
-import { uploadImage, deleteImage } from "@/lib/blob/storage";
+import { uploadImage } from "@/lib/blob/storage";
 import { cn } from "@/lib/utils";
 
 interface ImageUploaderProps {
@@ -19,6 +19,14 @@ interface ImageUploaderProps {
 function uploadErrorMessage(error: unknown) {
   const message = (error as { message?: string }).message ?? "";
 
+  if (
+    message.includes("nén ảnh") || message.includes("WebP") ||
+    message.includes("xử lý ảnh") || message.includes("đăng nhập") ||
+    message.includes("quản trị") || message.includes("URL ảnh")
+  ) {
+    return message;
+  }
+
   if (message.includes("BLOB_READ_WRITE_TOKEN")) {
     return "Chưa cấu hình Vercel Blob. Vào Vercel → Storage → Blob để tạo store và thêm BLOB_READ_WRITE_TOKEN.";
   }
@@ -26,7 +34,7 @@ function uploadErrorMessage(error: unknown) {
     return "Định dạng ảnh không được hỗ trợ.";
   }
   if (message.toLowerCase().includes("maximum") || message.toLowerCase().includes("too large")) {
-    return "Ảnh vượt quá dung lượng cho phép (10MB).";
+    return "Ảnh gốc vượt quá dung lượng cho phép (20MB với ảnh xe, 10MB với ảnh khác).";
   }
   return "Tải ảnh thất bại. Hãy kiểm tra cấu hình Vercel Blob.";
 }
@@ -63,10 +71,14 @@ export function ImageUploader({ folder, images, onChange, coverImage, onCoverCha
     }
   }
 
-  async function handleRemove(img: CarImage) {
-    onChange(images.filter((i) => i.path !== img.path));
-    if (coverImage === img.url && onCoverChange) onCoverChange(images[0]?.url ?? "");
-    await deleteImage(img.url);
+  function handleRemove(img: CarImage) {
+    const remaining = images.filter((i) => i.path !== img.path);
+    onChange(remaining);
+    if (coverImage === img.url && onCoverChange) onCoverChange(remaining[0]?.url ?? "");
+
+    // Do not delete the blob here. The edit form may still be cancelled, in
+    // which case Firestore continues to reference this URL. Orphaned uploads
+    // can be reviewed and removed safely from the file manager after saving.
   }
 
   return (
