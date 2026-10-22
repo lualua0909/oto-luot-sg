@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
+import { track } from "@vercel/analytics";
 
 export function ZaloIcon({ className }: { className?: string }) {
   return (
@@ -36,14 +37,13 @@ export function FloatingSocialRail() {
   const pathname = usePathname();
   if (pathname.startsWith("/admin")) return null;
 
-  // Every button always renders; a link that is not configured yet just sits inert.
   const items = [
     { href: site.zalo, label: "Chat Zalo", Icon: ZaloIcon, color: "#0068FF" },
     { href: site.facebook, label: "Messenger", Icon: MessengerIcon, color: "#0084FF" },
     { href: site.phone ? `tel:${site.phone}` : "", label: "Gọi ngay", Icon: Phone, color: "#0F6FC5", external: false },
     { href: site.tiktok1, label: "Tiktok", Icon: TiktokIcon, color: "#111827" },
     { href: site.tiktok2, label: "Tiktok 2", Icon: TiktokIcon, color: "#111827" },
-  ];
+  ].filter((item) => Boolean(item.href));
 
   return (
     <div className="fixed right-2 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-2.5 md:right-3 md:gap-3">
@@ -52,6 +52,7 @@ export function FloatingSocialRail() {
           key={label}
           href={href || undefined}
           aria-label={label}
+          onClick={() => track(label === "Gọi ngay" ? "phone_clicked" : "social_clicked", { location: "floating_rail", channel: label })}
           {...(external && href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           className="group relative flex h-10 w-10 items-center justify-center md:h-11 md:w-11 rounded-full text-white shadow-lg transition-transform duration-200 hover:scale-110"
           style={{ backgroundColor: color }}

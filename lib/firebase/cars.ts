@@ -28,7 +28,7 @@ function carSlug(title: string, year: number) {
 /** Get all cars that are published ("dang-ban"), newest first. Used on listing pages. */
 export async function getPublishedCars(max = 60): Promise<Car[]> {
   const cars = await getRecentCars(max);
-  return cars.filter((c) => c.status === "dang-ban").slice(0, max);
+  return cars.filter((c) => c.status === "dang-ban" || c.status === "dang-coc").slice(0, max);
 }
 
 /** Newest cars, sorted by a single field so no composite Firestore index is needed. */
@@ -57,7 +57,8 @@ export async function getCarBySlug(slug: string): Promise<Car | null> {
   const snap = await getDocs(q);
   if (snap.empty) return null;
   const d = snap.docs[0];
-  return { id: d.id, ...(d.data() as Omit<Car, "id">) };
+  const car = { id: d.id, ...(d.data() as Omit<Car, "id">) };
+  return car.status === "an" ? null : car;
 }
 
 export async function getCarById(id: string): Promise<Car | null> {

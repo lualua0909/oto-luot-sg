@@ -8,14 +8,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { LEAD_TOPICS, SITE } from "@/lib/constants";
+import { LEAD_TOPICS } from "@/lib/constants";
 import { submitLead } from "@/lib/firebase/leads";
 import { Headset, Loader2, Phone } from "lucide-react";
 import { T } from "@/components/shared/editable-text";
+import Link from "next/link";
+import { track } from "@vercel/analytics";
+import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 
-export function LeadForm() {
+interface LeadFormProps {
+  defaultTopic?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  id?: string;
+}
+
+export function LeadForm({
+  defaultTopic = LEAD_TOPICS[0],
+  eyebrow = "Tư vấn miễn phí",
+  title = "Đăng ký nhận tư vấn - báo giá",
+  description = "Để lại thông tin, đội ngũ Ô TÔ LƯỚT SÀI GÒN sẽ liên hệ tư vấn trong vòng 30 phút.",
+  id,
+}: LeadFormProps = {}) {
+  const initialTopic = LEAD_TOPICS.includes(defaultTopic) ? defaultTopic : LEAD_TOPICS[0];
+  const site = useShowroomSettings();
   const [loading, setLoading] = useState(false);
-  const [topic, setTopic] = useState(LEAD_TOPICS[0]);
+  const [topic, setTopic] = useState(initialTopic);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,9 +53,10 @@ export function LeadForm() {
     setLoading(true);
     try {
       await submitLead({ name, phone, email, topic, message });
+      track("lead_submitted", { topic });
       toast.success("Đã gửi đăng ký! Chúng tôi sẽ gọi lại cho bạn sớm nhất.");
       form.reset();
-      setTopic(LEAD_TOPICS[0]);
+      setTopic(initialTopic);
     } catch (err) {
       toast.error("Có lỗi xảy ra, vui lòng gọi hotline để được hỗ trợ ngay.");
     } finally {
@@ -45,22 +65,22 @@ export function LeadForm() {
   }
 
   return (
-    <section className="container-page py-14">
+    <section id={id} className="container-page scroll-mt-24 py-14">
       <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border bg-card shadow-card lg:grid-cols-2">
         <div className="bg-primary p-8 text-primary-foreground sm:p-10">
           <SectionHeading
             id="home.lead"
             icon={Headset}
-            eyebrow="Tư vấn miễn phí"
-            title="Đăng ký nhận tư vấn - báo giá"
-            description="Để lại thông tin, đội ngũ Ô TÔ LƯỚT SÀI GÒN sẽ liên hệ tư vấn trong vòng 30 phút."
+            eyebrow={eyebrow}
+            title={title}
+            description={description}
             className="mb-6 [&_h2]:text-primary-foreground [&_p]:text-primary-foreground/75"
           />
           <a
-            href={`tel:${SITE.phone}`}
+            href={`tel:${site.phone}`}
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground"
           >
-            <Phone className="h-4 w-4" /> <T id="home.lead.callNow">Hoặc gọi ngay</T> {SITE.phoneDisplay}
+            <Phone className="h-4 w-4" /> <T id="home.lead.callNow">Hoặc gọi ngay</T> {site.phoneDisplay}
           </a>
         </div>
 
@@ -96,6 +116,10 @@ export function LeadForm() {
             <Label htmlFor="message"><T id="home.lead.labelMessage">Nội dung</T></Label>
             <Textarea id="message" name="message" placeholder="Bạn cần tư vấn dòng xe nào, tầm giá bao nhiêu..." />
           </div>
+          <label className="flex items-start gap-2 text-xs leading-5 text-muted-foreground sm:col-span-2">
+            <input type="checkbox" required className="mt-0.5 h-4 w-4 shrink-0 rounded border-border" />
+            <span>Tôi đồng ý để showroom liên hệ về nội dung đã gửi và đã đọc <Link href="/chinh-sach/bao-mat-thong-tin" className="font-semibold text-primary hover:underline">chính sách bảo mật</Link>.</span>
+          </label>
           <Button type="submit" size="lg" variant="accent" disabled={loading} className="sm:col-span-2">
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             <T id="home.lead.submit">Gửi đăng ký</T>

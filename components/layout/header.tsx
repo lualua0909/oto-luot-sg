@@ -64,9 +64,9 @@ export function Header() {
             <a href={`tel:${site.phone}`} className="flex items-center gap-1.5 hover:underline">
               <Phone className="h-3.5 w-3.5" /> {site.phoneDisplay}
             </a>
-            <span className="hidden items-center gap-1.5 lg:flex">
+            {site.email && <span className="hidden items-center gap-1.5 lg:flex">
               <Mail className="h-3.5 w-3.5" /> {site.email}
-            </span>
+            </span>}
           </div>
         </div>
       </div>

@@ -43,6 +43,7 @@ function CarSlide({ car }: { car: Car }) {
             {car.brandName}
           </span>
           <span className="text-sm font-medium text-muted-foreground">{car.year}</span>
+          {car.status === "dang-coc" && <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[11px] font-semibold text-accent">Đang cọc</span>}
         </div>
         <h3 className="line-clamp-1 font-display text-lg font-bold text-primary">{car.title}</h3>
         <p className="font-semibold text-destructive">

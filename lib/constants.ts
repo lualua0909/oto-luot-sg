@@ -4,14 +4,17 @@ export const SITE = {
   name: "Ô TÔ LƯỚT SÀI GÒN",
   fullName: "Ô TÔ LƯỚT SÀI GÒN",
   description:
-    "Chuyên trang xe cũ đảm bảo chất lượng, uy tín hàng đầu TP.HCM. Xe đẹp - giá tốt, pháp lý chuẩn chỉnh, hỗ trợ thủ tục sang tên, đổi xe tận tình, định giá chuẩn thị trường và giao xe nhanh gọn.",
+    "Showroom ô tô lướt, xe cũ tại TP.HCM. Xe có sẵn để xem thực tế, hỗ trợ kiểm tra thông tin, thủ tục sang tên, thu mua xe và tư vấn trả góp.",
   slogan: "Xe đẹp - Giá rẻ - Uy tín - Chất lượng",
   // Override with NEXT_PUBLIC_SITE_URL (e.g. http://localhost:3000 in development).
-  url: "https://otoluotsaigon.com",
+  // Keep every canonical, sitemap and structured-data URL on the final host.
+  // The apex domain redirects to www in production.
+  url: "https://www.otoluotsaigon.com",
   phone: "0922549999",
   phone2: "0969550995",
   phoneDisplay: "0922 54 9999 - 096 9550995",
   contactPerson: "",
+  taxCode: "",
   email: "",
   address: "1060 Nguyễn Ảnh Thủ, P. Trung Mỹ Tây, TP. Hồ Chí Minh",
   mapEmbedUrl:
@@ -20,6 +23,7 @@ export const SITE = {
   zalo: "https://zalo.me/0922549999",
   tiktok1: "",
   tiktok2: "",
+  googleBusinessUrl: "",
 };
 
 export const NAV_LINKS = [

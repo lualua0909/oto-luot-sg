@@ -34,6 +34,7 @@ export function CarForm({ car }: { car?: Car }) {
   const [coverImage, setCoverImage] = useState(car?.coverImage ?? "");
   const [isFeatured, setIsFeatured] = useState(car?.isFeatured ?? false);
   const [isVerified, setIsVerified] = useState(car?.isVerified ?? true);
+  const [allowsIndependentInspection, setAllowsIndependentInspection] = useState(car?.allowsIndependentInspection ?? false);
   const [saving, setSaving] = useState(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -78,6 +79,14 @@ export function CarForm({ car }: { car?: Car }) {
       coverImage: validCoverImage,
       isFeatured,
       isVerified,
+      inspectionDate: String(data.get("inspectionDate") || "").trim() || undefined,
+      inspectionSummary: String(data.get("inspectionSummary") || "").trim() || undefined,
+      inspectionItems: String(data.get("inspectionItems") || "")
+        .split("\n")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      inspectionReportUrl: String(data.get("inspectionReportUrl") || "").trim() || undefined,
+      allowsIndependentInspection,
       status,
     };
 
@@ -112,6 +121,35 @@ export function CarForm({ car }: { car?: Car }) {
           coverImage={coverImage}
           onCoverChange={setCoverImage}
         />
+      </section>
+
+      <section className="space-y-4 rounded-xl border border-border bg-card p-5">
+        <div>
+          <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">Thông tin kiểm tra xe</h2>
+          <p className="mt-1 text-xs text-muted-foreground">Chỉ nhập nội dung đã kiểm tra và có thể xác nhận. Hệ thống lưu đúng dữ liệu admin nhập, không tự thay đổi.</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="inspectionDate">Ngày kiểm tra</Label>
+            <Input id="inspectionDate" name="inspectionDate" type="date" defaultValue={car?.inspectionDate} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="inspectionReportUrl">Link báo cáo / hồ sơ (nếu có)</Label>
+            <Input id="inspectionReportUrl" name="inspectionReportUrl" type="url" defaultValue={car?.inspectionReportUrl} placeholder="https://..." />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="inspectionItems">Hạng mục đã kiểm tra (mỗi dòng một ý)</Label>
+          <Textarea id="inspectionItems" name="inspectionItems" defaultValue={car?.inspectionItems?.join("\n")} rows={5} placeholder={"Đối chiếu số khung, số máy\nKiểm tra động cơ và hộp số\nKiểm tra thân vỏ và khung gầm"} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="inspectionSummary">Ghi chú kết quả</Label>
+          <Textarea id="inspectionSummary" name="inspectionSummary" defaultValue={car?.inspectionSummary} rows={4} placeholder="Ghi đúng tình trạng đã xác nhận và các điểm khách hàng cần lưu ý." />
+        </div>
+        <label className="flex items-start gap-2.5 text-sm">
+          <input type="checkbox" checked={allowsIndependentInspection} onChange={(e) => setAllowsIndependentInspection(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-border" />
+          Cho phép khách hàng đề nghị kiểm tra cùng kỹ thuật viên hoặc đơn vị độc lập
+        </label>
       </section>
 
       <section className="grid grid-cols-1 gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
@@ -265,6 +303,7 @@ export function CarForm({ car }: { car?: Car }) {
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="dang-ban">Đang bán (hiển thị công khai)</SelectItem>
+              <SelectItem value="dang-coc">Đang cọc (vẫn hiển thị công khai)</SelectItem>
               <SelectItem value="da-ban">Đã bán</SelectItem>
               <SelectItem value="an">Ẩn (nháp)</SelectItem>
             </SelectContent>

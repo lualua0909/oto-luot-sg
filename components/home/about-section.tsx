@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SITE } from "@/lib/constants";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { T } from "@/components/shared/editable-text";
 
@@ -25,7 +24,7 @@ export function AboutSection() {
         </h2>
         <p className="mt-4 leading-relaxed text-muted-foreground">
           <T id="home.about.paragraph1a">Mua bán ô tô cũ uy tín không phải là điều dễ dàng. Nắm bắt được nhu cầu đó,</T>{" "}
-          {SITE.fullName}{" "}
+          {site.fullName}{" "}
           <T id="home.about.paragraph1b">ra đời với mục tiêu trở thành cầu nối tin cậy giữa người mua và người bán xe.</T>
         </p>
         <p className="mt-3 leading-relaxed text-muted-foreground">
@@ -39,15 +38,14 @@ export function AboutSection() {
         <div className="mt-2 flex items-center gap-2.5 text-sm">
           <Phone className="h-4 w-4 shrink-0 text-primary" />
           <span>
-            <T id="home.about.hotlineLabel">Hotline / Zalo</T>: {SITE.phoneDisplay}
+            <T id="home.about.hotlineLabel">Hotline / Zalo</T>: {site.phoneDisplay}
           </span>
         </div>
 
-        <Button asChild size="lg" className="mt-6">
-          <Link href="/gioi-thieu">
-            <T id="home.about.cta">Tìm hiểu thêm</T>
-          </Link>
-        </Button>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild size="lg"><Link href="/gioi-thieu"><T id="home.about.cta">Tìm hiểu thêm</T></Link></Button>
+          {site.googleBusinessUrl && <Button asChild size="lg" variant="outline"><a href={site.googleBusinessUrl} target="_blank" rel="noopener noreferrer"><Star className="h-4 w-4" /> Xem trên Google</a></Button>}
+        </div>
       </div>
     </section>
   );

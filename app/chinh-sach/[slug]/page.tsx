@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { T } from "@/components/shared/editable-text";
+import { absoluteUrl } from "@/lib/seo";
 
 const POLICIES: Record<string, { title: string; content: string[] }> = {
   "mua-hang-thanh-toan": {
@@ -27,6 +28,15 @@ const POLICIES: Record<string, { title: string; content: string[] }> = {
       "Hỗ trợ trọn gói thủ tục sang tên, công chứng, đăng ký xe.",
     ],
   },
+  "bao-mat-thong-tin": {
+    title: "Chính sách bảo mật thông tin",
+    content: [
+      "Website chỉ thu thập thông tin khách hàng chủ động gửi qua biểu mẫu, như họ tên, số điện thoại, email và nội dung cần tư vấn.",
+      "Thông tin được sử dụng để liên hệ, tư vấn về xe hoặc dịch vụ mà khách hàng quan tâm và quản lý yêu cầu hỗ trợ.",
+      "Khách hàng có thể yêu cầu cập nhật hoặc xóa thông tin đã gửi bằng cách liên hệ trực tiếp với showroom qua hotline công bố trên website.",
+      "Không cung cấp thông tin liên hệ của khách hàng cho bên khác ngoài phạm vi cần thiết để thực hiện dịch vụ đã được khách hàng đồng ý hoặc theo yêu cầu hợp pháp của cơ quan có thẩm quyền.",
+    ],
+  },
 };
 
 export function generateStaticParams() {
@@ -35,7 +45,8 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const p = POLICIES[params.slug];
-  return p ? { title: p.title } : {};
+  const url = absoluteUrl(`/chinh-sach/${params.slug}`);
+  return p ? { title: p.title, alternates: { canonical: url }, openGraph: { url } } : {};
 }
 
 export default function PolicyPage({ params }: { params: { slug: string } }) {

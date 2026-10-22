@@ -22,12 +22,14 @@ const FIELDS: Array<{
   { key: "phone", label: "Số điện thoại (chỉ số)", type: "tel", placeholder: "0777733099" },
   { key: "phoneDisplay", label: "Số điện thoại hiển thị", type: "tel", placeholder: "0777 733 099" },
   { key: "contactPerson", label: "Người liên hệ" },
+  { key: "taxCode", label: "Mã số thuế / mã doanh nghiệp" },
   { key: "email", label: "Email", type: "email" },
   { key: "address", label: "Địa chỉ showroom" },
   { key: "facebook", label: "Link Facebook", type: "url" },
   { key: "zalo", label: "Link Zalo", type: "url" },
   { key: "tiktok1", label: "Link TikTok 1", type: "url" },
   { key: "tiktok2", label: "Link TikTok 2", type: "url" },
+  { key: "googleBusinessUrl", label: "Link Google Business / Google Maps", type: "url" },
   { key: "mapEmbedUrl", label: "Link nhúng bản đồ Google Maps", type: "url" },
 ];
 

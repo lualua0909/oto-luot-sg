@@ -21,6 +21,7 @@ import { deleteImage } from "@/lib/blob/storage";
 
 const STATUS_LABEL: Record<Car["status"], { label: string; variant: "success" | "secondary" | "outline" }> = {
   "dang-ban": { label: "Đang bán", variant: "success" },
+  "dang-coc": { label: "Đang cọc", variant: "outline" },
   "da-ban": { label: "Đã bán", variant: "secondary" },
   an: { label: "Đang ẩn", variant: "outline" },
 };

@@ -14,6 +14,8 @@ import { useShowroomSettings } from "@/components/shared/showroom-settings-provi
 import { formatPriceTrieu } from "@/lib/utils";
 import { Car } from "@/lib/types";
 import { T } from "@/components/shared/editable-text";
+import Link from "next/link";
+import { track } from "@vercel/analytics";
 
 function isLight(hex: string) {
   const n = parseInt(hex.slice(1), 16);
@@ -46,6 +48,7 @@ export function CarContactCard({ car }: { car: Car }) {
         carId: car.id,
         carTitle: car.title,
       });
+      track("car_lead_submitted", { car: car.slug });
       toast.success("Đã gửi! Chúng tôi sẽ gọi lại cho bạn ngay.");
       form.reset();
     } catch {
@@ -77,6 +80,16 @@ export function CarContactCard({ car }: { car: Car }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-5">
+        {car.status === "da-ban" ? (
+          <div className="space-y-4 text-center">
+            <div className="rounded-xl bg-muted p-4">
+              <p className="font-display text-lg font-bold">Xe này đã bán</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">Xem các xe đang có hoặc liên hệ để được gợi ý mẫu xe tương tự.</p>
+            </div>
+            <Button asChild className="w-full"><Link href="/mua-ban-o-to">Xem xe đang bán</Link></Button>
+          </div>
+        ) : (
+          <>
         <div className="grid grid-cols-2 gap-2.5">
           <Button
             asChild
@@ -89,12 +102,12 @@ export function CarContactCard({ car }: { car: Car }) {
                 : undefined
             }
           >
-            <a href={`tel:${site.phone}`}>
+            <a href={`tel:${site.phone}`} onClick={() => track("phone_clicked", { location: "car_detail", car: car.slug })}>
               <Phone className="h-4 w-4" /> <T id="car.contact.call">Gọi ngay</T>
             </a>
           </Button>
           <Button asChild variant="outline" size="lg" className="shadow-sm transition-shadow hover:shadow-md">
-            <a href={site.zalo} target="_blank" rel="noopener noreferrer">
+            <a href={site.zalo} target="_blank" rel="noopener noreferrer" onClick={() => track("zalo_clicked", { location: "car_detail", car: car.slug })}>
               <ZaloIcon className="h-5 w-5 text-[#0068FF]" /> <T id="car.contact.zalo">Chat Zalo</T>
             </a>
           </Button>
@@ -112,12 +125,18 @@ export function CarContactCard({ car }: { car: Car }) {
           <form onSubmit={onSubmit} className="space-y-2.5">
             <Input name="name" placeholder="Họ và tên" required />
             <Input name="phone" type="tel" placeholder="Số điện thoại" required />
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-muted-foreground">
+              <input type="checkbox" required className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-border" />
+              <span>Đồng ý để showroom liên hệ và chấp nhận <Link href="/chinh-sach/bao-mat-thong-tin" className="font-semibold text-primary hover:underline">chính sách bảo mật</Link>.</span>
+            </label>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               <T id="car.contact.submit">Gửi yêu cầu tư vấn</T>
             </Button>
           </form>
         </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

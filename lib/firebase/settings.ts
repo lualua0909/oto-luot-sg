@@ -13,6 +13,7 @@ export const DEFAULT_SHOWROOM_SETTINGS: ShowroomSettings = {
   phone: SITE.phone,
   phoneDisplay: SITE.phoneDisplay,
   contactPerson: SITE.contactPerson,
+  taxCode: SITE.taxCode,
   email: SITE.email,
   address: SITE.address,
   mapEmbedUrl: SITE.mapEmbedUrl,
@@ -20,6 +21,7 @@ export const DEFAULT_SHOWROOM_SETTINGS: ShowroomSettings = {
   zalo: SITE.zalo,
   tiktok1: SITE.tiktok1,
   tiktok2: SITE.tiktok2,
+  googleBusinessUrl: SITE.googleBusinessUrl,
 };
 
 const settingsRef = doc(db, "settings", SHOWROOM_SETTINGS_ID);

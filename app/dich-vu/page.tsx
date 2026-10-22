@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { ClipboardCheck, HandCoins, Wallet, Phone } from "lucide-react";
+import { ClipboardCheck, HandCoins, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { SITE } from "@/lib/constants";
 import { T } from "@/components/shared/editable-text";
+import Link from "next/link";
+import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Dịch vụ thu xe",
   description:
     "Dịch vụ kiểm tra xe ô tô cũ, thu mua xe ô tô cũ và hỗ trợ trả góp tại Ô TÔ LƯỚT SÀI GÒN.",
+  alternates: { canonical: absoluteUrl("/dich-vu") },
+  openGraph: { url: absoluteUrl("/dich-vu") },
 };
 
 const SERVICES = [
@@ -16,8 +19,9 @@ const SERVICES = [
     id: "services.item1",
     icon: ClipboardCheck,
     title: "Dịch vụ kiểm tra xe ô tô cũ",
+    href: "/dich-vu/kiem-tra-xe-o-to-cu",
     description:
-      "Đội ngũ kỹ thuật kiểm tra toàn diện động cơ, khung gầm, nội thất và giấy tờ trước khi bạn quyết định mua, giúp bạn tránh mua nhầm xe lỗi, xe ngập nước hay đâm đụng nặng.",
+      "Hỗ trợ xem xét động cơ, khung gầm, nội thất và giấy tờ theo phạm vi được xác nhận trước khi thực hiện, giúp người mua có thêm thông tin trước khi quyết định.",
     points: [
       "Kiểm tra động cơ, hộp số, khung gầm",
       "Kiểm tra sơn, đâm đụng, ngập nước",
@@ -29,6 +33,7 @@ const SERVICES = [
     id: "services.item2",
     icon: HandCoins,
     title: "Thu mua xe ô tô cũ",
+    href: "/dich-vu/thu-mua-xe-o-to-cu",
     description:
       "Bạn cần bán xe nhanh? Chúng tôi thu mua trực tiếp với giá hợp lý theo thị trường, thanh toán nhanh gọn, hỗ trợ thủ tục sang tên trọn gói.",
     points: [
@@ -42,13 +47,14 @@ const SERVICES = [
     id: "services.item3",
     icon: Wallet,
     title: "Ô tô cũ trả góp",
+    href: "/dich-vu/tra-gop",
     description:
-      "Liên kết với nhiều ngân hàng, hỗ trợ vay trả góp lên đến 70% giá trị xe, thủ tục đơn giản, duyệt hồ sơ nhanh trong 24h.",
+      "Hỗ trợ chuẩn bị thông tin xe và tư vấn hồ sơ mua xe trả góp. Hạn mức, lãi suất và thời gian phê duyệt phụ thuộc ngân hàng và từng hồ sơ.",
     points: [
-      "Vay tối đa 70% giá trị xe",
-      "Lãi suất ưu đãi, kỳ hạn linh hoạt",
+      "Ước tính khoản trả trước và tiền hàng tháng",
+      "Tham khảo lãi suất và kỳ hạn phù hợp",
       "Hỗ trợ hoàn thiện hồ sơ vay",
-      "Duyệt hồ sơ nhanh trong 24 giờ",
+      "Xem điều kiện chính thức trước khi ký",
     ],
   },
 ];
@@ -57,6 +63,7 @@ export default function ServicesPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        as="h1"
         id="services.heading"
         eyebrow="Dịch vụ"
         title="Dịch vụ thu xe & hỗ trợ khách hàng"
@@ -84,9 +91,9 @@ export default function ServicesPage() {
               ))}
             </ul>
             <Button asChild variant="outline" className="mt-6">
-              <a href={`tel:${SITE.phone}`}>
-                <Phone className="h-4 w-4" /> <T id="services.cta">Liên hệ tư vấn</T>
-              </a>
+              <Link href={s.href}>
+                <T id="services.cta">Xem chi tiết</T>
+              </Link>
             </Button>
           </div>
         ))}

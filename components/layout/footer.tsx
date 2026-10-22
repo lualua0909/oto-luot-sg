@@ -11,6 +11,7 @@ const POLICY_LINKS = [
   { href: "/chinh-sach/mua-hang-thanh-toan", label: "Mua hàng & thanh toán" },
   { href: "/chinh-sach/bao-hanh", label: "Chính sách bảo hành" },
   { href: "/chinh-sach/ban-hang", label: "Chính sách bán hàng" },
+  { href: "/chinh-sach/bao-mat-thong-tin", label: "Bảo mật thông tin" },
 ];
 
 export function Footer() {
@@ -33,7 +34,7 @@ export function Footer() {
             {site.description}
           </p>
           <div className="mt-4 flex gap-3">
-            <a
+            {site.facebook && <a
               href={site.facebook}
               target="_blank"
               rel="noopener noreferrer"
@@ -41,8 +42,8 @@ export function Footer() {
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
             >
               <Facebook className="h-4 w-4" />
-            </a>
-            <a
+            </a>}
+            {site.zalo && <a
               href={site.zalo}
               target="_blank"
               rel="noopener noreferrer"
@@ -50,7 +51,7 @@ export function Footer() {
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold hover:bg-white/20"
             >
               <T id="footer.zalo">Zalo</T>
-            </a>
+            </a>}
           </div>
         </div>
 
@@ -92,12 +93,14 @@ export function Footer() {
             <li className="flex gap-2.5">
               <MapPin className="h-4 w-4 shrink-0 text-accent" /> {site.address}
             </li>
-            <li className="flex gap-2.5">
+            {site.taxCode && <li className="text-xs text-primary-foreground/65">Mã số thuế: {site.taxCode}</li>}
+            {site.contactPerson && <li className="flex gap-2.5">
               <Phone className="h-4 w-4 shrink-0 text-accent" /> {site.phoneDisplay} ({site.contactPerson})
-            </li>
-            <li className="flex gap-2.5">
+            </li>}
+            {!site.contactPerson && <li className="flex gap-2.5"><Phone className="h-4 w-4 shrink-0 text-accent" /> {site.phoneDisplay}</li>}
+            {site.email && <li className="flex gap-2.5">
               <Mail className="h-4 w-4 shrink-0 text-accent" /> {site.email}
-            </li>
+            </li>}
           </ul>
         </div>
       </div>

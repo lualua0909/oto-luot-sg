@@ -8,7 +8,7 @@ export type BodyType =
   | "Bán tải"
   | "MPV"
   | "Van";
-export type CarStatus = "dang-ban" | "da-ban" | "an";
+export type CarStatus = "dang-ban" | "dang-coc" | "da-ban" | "an";
 
 export interface CarImage {
   url: string;
@@ -37,6 +37,11 @@ export interface Car {
   coverImage: string;
   isFeatured: boolean;
   isVerified: boolean; // "đã kiểm định"
+  inspectionDate?: string;
+  inspectionSummary?: string;
+  inspectionItems?: string[];
+  inspectionReportUrl?: string;
+  allowsIndependentInspection?: boolean;
   status: CarStatus;
   createdAt: number; // epoch ms
   updatedAt: number;
@@ -82,6 +87,7 @@ export interface ShowroomSettings {
   phone: string;
   phoneDisplay: string;
   contactPerson: string;
+  taxCode: string;
   email: string;
   address: string;
   mapEmbedUrl: string;
@@ -89,6 +95,7 @@ export interface ShowroomSettings {
   zalo: string;
   tiktok1: string;
   tiktok2: string;
+  googleBusinessUrl: string;
 }
 
 export interface CarFilters {

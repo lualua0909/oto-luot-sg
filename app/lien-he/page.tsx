@@ -4,12 +4,15 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { LeadForm } from "@/components/home/lead-form";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { T } from "@/components/shared/editable-text";
+import { absoluteUrl } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getShowroomSettings();
   return {
     title: "Liên hệ",
     description: `Liên hệ ${site.fullName} — hotline ${site.phoneDisplay}, địa chỉ ${site.address}.`,
+    alternates: { canonical: absoluteUrl("/lien-he") },
+    openGraph: { url: absoluteUrl("/lien-he") },
   };
 }
 
@@ -19,6 +22,7 @@ export default async function ContactPage() {
     <div>
       <div className="container-page py-10">
         <SectionHeading
+          as="h1"
           id="contact.heading"
           eyebrow="Liên hệ"
           title="Liên hệ với chúng tôi"

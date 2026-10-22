@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { SITE, BRANDS } from "@/lib/constants";
+import { BRANDS } from "@/lib/constants";
 import { getPublishedCars } from "@/lib/firebase/cars";
 import { getPublishedNews } from "@/lib/firebase/news";
+import { getSiteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
+  const base = getSiteUrl();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${base}/`, changeFrequency: "daily", priority: 1 },
@@ -13,18 +14,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/tin-tuc`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/gioi-thieu`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/lien-he`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${base}/dich-vu/kiem-tra-xe-o-to-cu`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/dich-vu/thu-mua-xe-o-to-cu`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/dich-vu/tra-gop`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/chinh-sach/mua-hang-thanh-toan`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/chinh-sach/bao-hanh`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/chinh-sach/ban-hang`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/chinh-sach/bao-mat-thong-tin`, changeFrequency: "yearly", priority: 0.3 },
   ];
-
-  const brandPages: MetadataRoute.Sitemap = BRANDS.map((b) => ({
-    url: `${base}/mua-ban-o-to/${b.slug}`,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
 
   const [cars, news] = await Promise.all([
     getPublishedCars(500).catch(() => []),
     getPublishedNews(200).catch(() => []),
   ]);
+
+  const brandsWithInventory = new Set(cars.map((car) => car.brand));
+  const brandPages: MetadataRoute.Sitemap = BRANDS
+    .filter((brand) => brandsWithInventory.has(brand.slug))
+    .map((brand) => ({
+      url: `${base}/mua-ban-o-to/${brand.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
   const carPages: MetadataRoute.Sitemap = cars.map((c) => ({
     url: `${base}/xe/${c.slug}`,

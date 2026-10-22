@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { SITE } from "@/lib/constants";
+import { getSiteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
+  const base = getSiteUrl();
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/admin"] }],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/admin/"] }],
     sitemap: `${base}/sitemap.xml`,
+    host: base,
   };
 }

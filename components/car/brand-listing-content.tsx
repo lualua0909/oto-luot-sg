@@ -14,8 +14,9 @@ export function BrandListingContent({ brandSlug, cars }: { brandSlug: string; ca
   return (
     <div className="container-page py-10">
       <SectionHeading
+        as="h1"
         eyebrow="Mua bán ô tô"
-        title={`Ô tô cũ ${brand.name}`}
+        title={`Xe ${brand.name} cũ tại TP.HCM`}
         description={`Toàn bộ xe ${brand.name} đã qua sử dụng đang có tại showroom.`}
       />
       <CarListing cars={cars} initialBrand={brand.slug} />

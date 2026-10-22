@@ -45,7 +45,9 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
-NEXT_PUBLIC_SITE_URL=https://chootobinhtan.com
+NEXT_PUBLIC_SITE_URL=https://www.otoluotsaigon.com
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=... # tùy chọn, lấy từ Google Search Console
+NEXT_PUBLIC_BING_SITE_VERIFICATION=...   # tùy chọn, lấy từ Bing Webmaster Tools
 ```
 
 ## 3. Chạy thử ở máy tính
@@ -74,7 +76,7 @@ Trang chủ sẽ hiển thị "Chưa có xe nào" cho tới khi bạn đăng xe 
 4. Bấm **Deploy**. Vercel tự nhận diện đây là dự án Next.js, không cần chỉnh gì thêm.
 5. Sau khi deploy xong, vào **Firebase Console → Authentication → Settings →
    Authorized domains** và thêm domain Vercel cấp cho bạn (và domain riêng nếu có, ví dụ
-   `chootobinhtan.com`) để đăng nhập `/admin` hoạt động đúng.
+   `www.otoluotsaigon.com`) để đăng nhập `/admin` hoạt động đúng.
 
 ## Cấu trúc thư mục chính
 

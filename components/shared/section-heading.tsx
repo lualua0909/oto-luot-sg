@@ -10,6 +10,7 @@ export function SectionHeading({
   align = "left",
   icon: Icon,
   className,
+  as = "h2",
 }: {
   /**
    * Content key prefix — the three lines are stored as `<id>.eyebrow|title|description`.
@@ -24,7 +25,9 @@ export function SectionHeading({
   /** Optional lucide icon shown next to the eyebrow. */
   icon?: LucideIcon;
   className?: string;
+  as?: "h1" | "h2";
 }) {
+  const Heading = as;
   return (
     <div className={cn("mb-8", align === "center" && "text-center", className)}>
       {eyebrow && (
@@ -38,7 +41,7 @@ export function SectionHeading({
           {id ? <T id={`${id}.eyebrow`}>{eyebrow}</T> : eyebrow}
         </p>
       )}
-      <h2 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{id ? <T id={`${id}.title`}>{title}</T> : title}</h2>
+      <Heading className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{id ? <T id={`${id}.title`}>{title}</T> : title}</Heading>
       {description && (
         <p className={cn("mt-2 max-w-2xl text-muted-foreground", align === "center" && "mx-auto")}>
           {id ? <T id={`${id}.description`}>{description}</T> : description}

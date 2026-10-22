@@ -5,12 +5,15 @@ import { getPublishedNews } from "@/lib/firebase/news";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
+import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Kiến thức mua bán ô tô",
   description: "Kinh nghiệm, thủ tục và mẹo kiểm tra xe ô tô cũ từ Ô TÔ LƯỚT SÀI GÒN.",
+  alternates: { canonical: absoluteUrl("/tin-tuc") },
+  openGraph: { url: absoluteUrl("/tin-tuc") },
 };
 
 export default async function NewsListPage() {
@@ -19,6 +22,7 @@ export default async function NewsListPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        as="h1"
         id="news.heading"
         eyebrow="Kiến thức"
         title="Chia sẻ kiến thức về xe"

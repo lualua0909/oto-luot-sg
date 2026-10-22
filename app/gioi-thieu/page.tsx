@@ -4,12 +4,15 @@ import { ShieldCheck, Handshake, BadgeCheck, Wallet } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { T } from "@/components/shared/editable-text";
+import { absoluteUrl } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getShowroomSettings();
   return {
     title: "Giới thiệu",
     description: `Tìm hiểu về ${site.fullName} — showroom ô tô lướt uy tín tại TP.HCM.`,
+    alternates: { canonical: absoluteUrl("/gioi-thieu") },
+    openGraph: { url: absoluteUrl("/gioi-thieu") },
   };
 }
 
@@ -25,6 +28,7 @@ export default async function AboutPage() {
   return (
     <div className="container-page py-10">
       <SectionHeading
+        as="h1"
         id="about.heading"
         eyebrow="Giới thiệu"
         title={site.fullName}

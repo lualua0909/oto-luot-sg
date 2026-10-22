@@ -15,6 +15,7 @@ import { getContentTexts } from "@/lib/firebase/content";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { getSiteUrl } from "@/lib/seo";
 
 const display = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -31,7 +32,7 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || SITE.url),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: `${SITE.name} | ${SITE.slogan}`,
     template: `%s | ${SITE.name}`,
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "vi_VN",
-    url: SITE.url,
+    url: getSiteUrl(),
     siteName: SITE.name,
     title: `${SITE.name} | ${SITE.slogan}`,
     description: SITE.description,
@@ -63,29 +64,48 @@ export const metadata: Metadata = {
     description: SITE.description,
   },
   robots: { index: true, follow: true },
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": [process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION] } }
+      : {}),
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const contentTexts = await getContentTexts().catch(() => ({}));
   const showroomSettings = await getShowroomSettings().catch(() => null);
+  const site = showroomSettings ?? SITE;
+  const siteUrl = getSiteUrl();
+  const sameAs = [site.facebook, site.zalo, site.tiktok1, site.tiktok2, site.googleBusinessUrl].filter(Boolean);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
-    name: SITE.fullName,
-    alternateName: SITE.name,
-    url: SITE.url,
-    telephone: SITE.phone,
-    email: SITE.email,
-    image: `${SITE.url}/images/og-cover.jpg`,
+    "@id": `${siteUrl}/#showroom`,
+    name: site.fullName,
+    alternateName: site.name,
+    url: siteUrl,
+    telephone: site.phone,
+    ...(site.taxCode ? { taxID: site.taxCode } : {}),
+    ...(site.email ? { email: site.email } : {}),
+    image: `${siteUrl}/images/og-cover.jpg`,
+    logo: `${siteUrl}/images/logo.png`,
+    priceRange: "₫₫",
     address: {
       "@type": "PostalAddress",
-      streetAddress: showroomSettings?.address ?? SITE.address,
+      streetAddress: site.address,
       addressLocality: "Hồ Chí Minh",
       addressCountry: "VN",
     },
-    geo: { "@type": "GeoCoordinates", latitude: 10.823099, longitude: 106.629664 },
-    sameAs: [SITE.facebook, SITE.zalo, SITE.tiktok1, SITE.tiktok2],
+    areaServed: { "@type": "City", name: "Thành phố Hồ Chí Minh" },
+    openingHoursSpecification: [{
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "07:30",
+      closes: "19:00",
+    }],
+    ...(sameAs.length ? { sameAs } : {}),
   };
 
   return (
