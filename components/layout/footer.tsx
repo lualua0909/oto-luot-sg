@@ -102,6 +102,16 @@ export function Footer() {
               <Mail className="h-4 w-4 shrink-0 text-accent" /> {site.email}
             </li>}
           </ul>
+          {site.mapEmbedUrl && (
+            <div className="mt-4 hidden overflow-hidden rounded-lg border border-white/10 lg:block">
+              <iframe
+                src={site.mapEmbedUrl}
+                className="h-36 w-full"
+                loading="lazy"
+                title={`Bản đồ showroom ${site.name}`}
+              />
+            </div>
+          )}
         </div>
       </div>
 

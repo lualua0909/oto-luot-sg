@@ -52,6 +52,33 @@ export async function getCarsByBrand(brandSlug: string, max = 60): Promise<Car[]
   return published.filter((c) => c.brand === brandSlug).slice(0, max);
 }
 
+/**
+ * Cars to suggest under a car's detail page. Every other car on sale is scored by
+ * how close it is to this one (brand, model, body type, price, year), so the list
+ * is still full when the brand has few cars in stock.
+ */
+export async function getRelatedCars(car: Car, max = 4): Promise<Car[]> {
+  const candidates = (await getPublishedCars(60)).filter((c) => c.id !== car.id);
+  const score = (c: Car) => {
+    let s = 0;
+    if (c.brand === car.brand) s += 4;
+    if (c.brand === car.brand && c.model && c.model === car.model) s += 3;
+    if (c.bodyType === car.bodyType) s += 3;
+    // Price within ±20% counts fully, fading to nothing at ±50%.
+    const priceGap = Math.abs(c.priceTrieu - car.priceTrieu) / Math.max(car.priceTrieu, 1);
+    s += priceGap <= 0.2 ? 3 : priceGap <= 0.5 ? 1.5 : 0;
+    const yearGap = Math.abs(c.year - car.year);
+    s += yearGap <= 2 ? 1 : 0;
+    if (c.transmission === car.transmission) s += 0.5;
+    return s;
+  };
+  return candidates
+    .map((c) => ({ c, s: score(c) }))
+    .sort((a, b) => b.s - a.s || b.c.createdAt - a.c.createdAt)
+    .slice(0, max)
+    .map(({ c }) => c);
+}
+
 export async function getCarBySlug(slug: string): Promise<Car | null> {
   const q = query(collection(db, CARS), where("slug", "==", slug), fsLimit(1));
   const snap = await getDocs(q);

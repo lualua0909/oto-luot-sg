@@ -5,6 +5,7 @@ import { LeadForm } from "@/components/home/lead-form";
 import { AboutSection } from "@/components/home/about-section";
 import { NewsSection } from "@/components/home/news-section";
 import { TrustProcessSection } from "@/components/home/trust-process-section";
+import { RecentlyViewedSection } from "@/components/car/recently-viewed";
 import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { getFeaturedCars } from "@/lib/firebase/cars";
 import { getPublishedNews } from "@/lib/firebase/news";
@@ -30,6 +31,7 @@ export default async function HomePage() {
     <>
       <Hero />
       <BrandGrid />
+      <RecentlyViewedSection />
       <CarGridSection cars={cars} />
       <TrustProcessSection />
       <LoanCalculator />

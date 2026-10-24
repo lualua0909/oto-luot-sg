@@ -7,11 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatPriceTrieu } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
 import { ResilientCarImage } from "@/components/car/resilient-car-image";
-import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
-import { track } from "@vercel/analytics";
 
 export function CarCard({ car }: { car: Car }) {
-  const site = useShowroomSettings();
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl">
       <Link href={`/xe/${car.slug}`} className="contents">
@@ -75,22 +72,6 @@ export function CarCard({ car }: { car: Car }) {
           </p>
         </div>
       </Link>
-
-      <div className="mt-auto flex items-center gap-2 border-t border-border p-3">
-        <Link
-          href={`/xe/${car.slug}`}
-          className="flex-1 rounded-md border border-border px-3 py-2 text-center text-xs font-semibold text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary"
-        >
-          <T id="car.card.detail">Xem chi tiết</T>
-        </Link>
-        <a
-          href={`tel:${site.phone}`}
-          onClick={() => track("phone_clicked", { location: "car_card", car: car.slug })}
-          className="flex-1 rounded-md bg-primary px-3 py-2 text-center text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-        >
-          <T id="car.card.contact">Liên hệ ngay</T>
-        </a>
-      </div>
     </article>
   );
 }

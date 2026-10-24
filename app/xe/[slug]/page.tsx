@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck, CheckCircle2, Clock3, MapPin, ShieldCheck } from "lucide-react";
-import { getCarBySlug, getCarsByBrand } from "@/lib/firebase/cars";
+import { getCarBySlug, getRelatedCars } from "@/lib/firebase/cars";
 import { CarGallery } from "@/components/car/car-gallery";
 import { CarSpecs } from "@/components/car/car-specs";
 import { CarContactCard } from "@/components/car/car-contact-card";
@@ -14,6 +14,7 @@ import { T } from "@/components/shared/editable-text";
 import { CarInspectionCard } from "@/components/car/car-inspection-card";
 import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { absoluteUrl, cleanSeoText, compactDescription } from "@/lib/seo";
+import { TrackRecentlyViewed } from "@/components/car/recently-viewed";
 
 export const revalidate = 60;
 
@@ -39,9 +40,7 @@ export default async function CarDetailPage({ params }: { params: { slug: string
   const car = await getCarBySlug(params.slug).catch(() => null);
   if (!car) notFound();
 
-  const related = (await getCarsByBrand(car.brand).catch(() => []))
-    .filter((c) => c.id !== car.id)
-    .slice(0, 4);
+  const related = await getRelatedCars(car, 4).catch(() => []);
 
   const colorHex = getCarColorHex(car.color);
   const cardStyle = colorHex
@@ -91,6 +90,18 @@ export default async function CarDetailPage({ params }: { params: { slug: string
   return (
     <div className="bg-muted/30 pb-14">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([productJsonLd, breadcrumbJsonLd]) }} />
+      <TrackRecentlyViewed
+        car={{
+          id: car.id,
+          slug: car.slug,
+          title: car.title,
+          brandName: car.brandName,
+          year: car.year,
+          priceTrieu: car.priceTrieu,
+          odoKm: car.odoKm ?? null,
+          coverImage: car.coverImage || car.images?.[0]?.url || "",
+        }}
+      />
 
       <div className="container-page pt-5 sm:pt-7">
         <nav className="mb-4 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
@@ -154,25 +165,27 @@ export default async function CarDetailPage({ params }: { params: { slug: string
               <p className="whitespace-pre-line leading-7 text-foreground/85">{car.description || "Showroom đang cập nhật thêm thông tin chi tiết về xe này."}</p>
             </section>
 
-            {car.status !== "da-ban" && <LoanCalculator initialPriceTrieu={car.priceTrieu} compact />}
-
             <div className="flex gap-3 rounded-xl border border-success/20 bg-success/5 p-4 text-sm leading-relaxed text-foreground/80">
               <ShieldCheck className="h-5 w-5 shrink-0 text-success" />
               <T id="car.detail.note">Vui lòng liên hệ showroom để được tư vấn, hẹn xem xe và kiểm tra giấy tờ thực tế trước khi quyết định.</T>
             </div>
           </div>
 
-          <aside>
+          <aside className="space-y-5">
             <CarContactCard car={car} />
+            {car.status !== "da-ban" && <LoanCalculator initialPriceTrieu={car.priceTrieu} compact />}
           </aside>
         </div>
       </div>
 
       {related.length > 0 && (
         <section className="container-page mt-10">
-          <h2 className="mb-5 font-display text-xl font-bold">
-            <T id="car.detail.relatedTitle">Xe cùng hãng</T> {car.brandName}
+          <h2 className="font-display text-xl font-bold">
+            <T id="car.detail.relatedCarsTitle">Xe liên quan</T>
           </h2>
+          <p className="mb-5 mt-1 text-sm text-muted-foreground">
+            <T id="car.detail.relatedCarsDescription">Gợi ý xe cùng hãng, cùng kiểu dáng hoặc cùng tầm giá</T>
+          </p>
           <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
             {related.map((c) => <CarCard key={c.id} car={c} />)}
           </div>
