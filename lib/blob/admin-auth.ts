@@ -33,8 +33,13 @@ export async function requireUploadAdmin(idToken: string | null | undefined): Pr
   if (response.status === 403 || response.status === 404) throw new UploadAuthError();
   if (!response.ok) throw new Error("Không thể kiểm tra quyền quản trị lúc này.");
 
-  const document = (await response.json()) as { fields?: { role?: { integerValue?: string } } };
-  const role = Number(document.fields?.role?.integerValue);
+  // Firestore REST may encode the number as integerValue, doubleValue or (if
+  // edited by hand in the Console) stringValue — accept all of them.
+  const document = (await response.json()) as {
+    fields?: { role?: { integerValue?: string; doubleValue?: number; stringValue?: string } };
+  };
+  const roleField = document.fields?.role;
+  const role = Number(roleField?.integerValue ?? roleField?.doubleValue ?? roleField?.stringValue);
   if (role !== 0 && role !== 1) throw new UploadAuthError();
   return uid;
 }

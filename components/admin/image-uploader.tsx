@@ -19,14 +19,6 @@ interface ImageUploaderProps {
 function uploadErrorMessage(error: unknown) {
   const message = (error as { message?: string }).message ?? "";
 
-  if (
-    message.includes("nén ảnh") || message.includes("WebP") ||
-    message.includes("xử lý ảnh") || message.includes("đăng nhập") ||
-    message.includes("quản trị") || message.includes("URL ảnh")
-  ) {
-    return message;
-  }
-
   if (message.includes("BLOB_READ_WRITE_TOKEN")) {
     return "Chưa cấu hình Vercel Blob. Vào Vercel → Storage → Blob để tạo store và thêm BLOB_READ_WRITE_TOKEN.";
   }
@@ -36,7 +28,9 @@ function uploadErrorMessage(error: unknown) {
   if (message.toLowerCase().includes("maximum") || message.toLowerCase().includes("too large")) {
     return "Ảnh gốc vượt quá dung lượng cho phép (20MB với ảnh xe, 10MB với ảnh khác).";
   }
-  return "Tải ảnh thất bại. Hãy kiểm tra cấu hình Vercel Blob.";
+  // Our own server messages are in Vietnamese — show them as-is.
+  if (/[à-ỹđ]/i.test(message)) return message;
+  return message ? `Tải ảnh thất bại: ${message}` : "Tải ảnh thất bại. Hãy kiểm tra cấu hình Vercel Blob.";
 }
 
 export function ImageUploader({ folder, images, onChange, coverImage, onCoverChange }: ImageUploaderProps) {

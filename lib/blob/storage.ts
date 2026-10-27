@@ -1,4 +1,4 @@
-import { upload } from "@vercel/blob/client";
+import { put } from "@vercel/blob/client";
 import { getAuth } from "firebase/auth";
 import { CarImage } from "../types";
 import { firebaseApp } from "../firebase/client";
@@ -24,10 +24,26 @@ export async function uploadImage(
   const uploadPath = folder === "cars"
     ? `staging/cars/${Date.now()}-${safeName}`
     : `${folder}/${Date.now()}-${safeName}`;
-  const blob = await upload(uploadPath, uploadFile, {
+  // Fetch the client token ourselves: the SDK's upload() hides the server's
+  // error message behind "Failed to retrieve the client token".
+  const tokenResponse = await fetch("/api/upload", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "blob.generate-client-token",
+      payload: { pathname: uploadPath, clientPayload: idToken, multipart: false },
+    }),
+  });
+  const tokenResult = (await tokenResponse.json().catch(() => null)) as
+    | { clientToken?: string; error?: string }
+    | null;
+  if (!tokenResponse.ok || !tokenResult?.clientToken) {
+    throw new Error(tokenResult?.error ?? `Không lấy được quyền tải ảnh (HTTP ${tokenResponse.status}).`);
+  }
+
+  const blob = await put(uploadPath, uploadFile, {
     access: "public",
-    handleUploadUrl: "/api/upload",
-    clientPayload: idToken,
+    token: tokenResult.clientToken,
     onUploadProgress: ({ percentage }) => onProgress?.(Math.round(percentage * (folder === "cars" ? 0.95 : 1))),
   });
 
