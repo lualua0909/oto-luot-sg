@@ -2,7 +2,7 @@
   "name": "oto-luot-sai-gon",
   "version": "1.0.0",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "private": true,
   "scripts": {
