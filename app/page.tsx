@@ -21,6 +21,15 @@ export const metadata: Metadata = {
   openGraph: { url: absoluteUrl("/") },
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${absoluteUrl("/")}/#website`,
+  name: "Ô TÔ LƯỚT SÀI GÒN",
+  alternateName: ["Oto Luot Sai Gon", "otoluotsaigon.com"],
+  url: absoluteUrl("/"),
+};
+
 export default async function HomePage() {
   const [cars, news] = await Promise.all([
     getFeaturedCars(12).catch(() => []),
@@ -29,6 +38,10 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <Hero />
       <BrandGrid />
       <RecentlyViewedSection />

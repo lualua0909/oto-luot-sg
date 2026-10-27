@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { CarImage } from "@/lib/types";
 import { uploadImage } from "@/lib/blob/storage";
 import { cn } from "@/lib/utils";
+import { reportAdminError } from "@/lib/client/error-log";
 
 interface ImageUploaderProps {
   folder: "cars" | "news";
@@ -56,7 +57,7 @@ export function ImageUploader({ folder, images, onChange, coverImage, onCoverCha
       if (onCoverChange && !coverImage && next[0]) onCoverChange(next[0].url);
       toast.success(`Đã tải lên ${uploaded.length} ảnh.`);
     } catch (err) {
-      console.error("Vercel Blob upload failed", err);
+      await reportAdminError(`${folder}.image-upload`, err);
       toast.error(uploadErrorMessage(err));
     } finally {
       setUploading(false);

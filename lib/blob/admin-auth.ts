@@ -10,8 +10,7 @@ export class UploadAuthError extends Error {
   }
 }
 
-/** Verify the Firebase ID token and the current Firestore admin role. */
-export async function requireUploadAdmin(idToken: string | null | undefined): Promise<string> {
+async function verifyIdToken(idToken: string | null | undefined): Promise<{ uid: string; projectId: string }> {
   if (!idToken) throw new UploadAuthError("Vui lòng đăng nhập tài khoản quản trị.");
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   if (!projectId) throw new Error("Thiếu NEXT_PUBLIC_FIREBASE_PROJECT_ID.");
@@ -24,6 +23,19 @@ export async function requireUploadAdmin(idToken: string | null | undefined): Pr
   } catch {
     throw new UploadAuthError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
   }
+
+  return { uid, projectId };
+}
+
+/** Verify a signed-in Firebase account without requiring an admin role. */
+export async function requireFirebaseUser(idToken: string | null | undefined): Promise<string> {
+  const { uid } = await verifyIdToken(idToken);
+  return uid;
+}
+
+/** Verify the Firebase ID token and the current Firestore admin role. */
+export async function requireUploadAdmin(idToken: string | null | undefined): Promise<string> {
+  const { uid, projectId } = await verifyIdToken(idToken);
 
   const documentUrl = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/databases/(default)/documents/users/${encodeURIComponent(uid)}`;
   const response = await fetch(documentUrl, {

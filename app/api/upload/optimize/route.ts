@@ -2,6 +2,7 @@ import { del, head, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { requireUploadAdmin, UploadAuthError } from "@/lib/blob/admin-auth";
 import { CAR_IMAGE_MAX_BYTES, CAR_IMAGE_MAX_DIMENSION, compressCarImage } from "@/lib/blob/server-webp";
+import { writeErrorLog } from "@/lib/server/error-log";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -55,7 +56,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     try {
       await del(original.url);
     } catch (cleanupError) {
-      console.warn("Could not delete staged car image", cleanupError);
+      await writeErrorLog("api.upload.optimize.cleanup-staging", cleanupError);
     }
 
     return NextResponse.json({
@@ -66,6 +67,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       height: compressed.height,
     });
   } catch (error) {
+    await writeErrorLog("api.upload.optimize", error);
     const message = error instanceof Error ? error.message : "Không thể nén ảnh xe.";
     return NextResponse.json(
       { error: message },

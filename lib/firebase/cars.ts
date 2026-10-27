@@ -104,11 +104,15 @@ export async function getAllCarsAdmin(): Promise<Car[]> {
 
 export type CarInput = Omit<Car, "id" | "slug" | "createdAt" | "updatedAt">;
 
+function withoutUndefined<T extends object>(value: T): T {
+  return Object.fromEntries(Object.entries(value).filter(([, field]) => field !== undefined)) as T;
+}
+
 /** ADMIN: create a new car listing. */
 export async function createCar(input: CarInput): Promise<string> {
   const slug = carSlug(input.title, input.year);
   const ref = await addDoc(collection(db, CARS), {
-    ...input,
+    ...withoutUndefined(input),
     slug,
     createdAt: Date.now(),
     updatedAt: Date.now(),
@@ -119,7 +123,7 @@ export async function createCar(input: CarInput): Promise<string> {
 /** ADMIN: update an existing car listing. */
 export async function updateCar(id: string, input: Partial<CarInput>): Promise<void> {
   const ref = doc(db, CARS, id);
-  await updateDoc(ref, { ...input, updatedAt: Date.now() });
+  await updateDoc(ref, { ...withoutUndefined(input), updatedAt: Date.now() });
 }
 
 /** ADMIN: delete a car listing (does not delete its images from Storage — do that separately). */

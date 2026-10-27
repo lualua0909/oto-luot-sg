@@ -1,13 +1,13 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 import { requireUploadAdmin, UploadAuthError } from "@/lib/blob/admin-auth";
+import { writeErrorLog } from "@/lib/server/error-log";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const body = (await request.json()) as HandleUploadBody;
-
   try {
+    const body = (await request.json()) as HandleUploadBody;
     const json = await handleUpload({
       body,
       request,
@@ -25,12 +25,10 @@ export async function POST(request: Request): Promise<NextResponse> {
           maximumSizeInBytes: (isCar ? 20 : 10) * 1024 * 1024,
         };
       },
-      onUploadCompleted: async () => {
-        // The admin client waits for /api/upload/optimize before saving car URLs.
-      },
     });
     return NextResponse.json(json);
   } catch (error) {
+    await writeErrorLog("api.upload.token", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: error instanceof UploadAuthError ? 403 : 400 }

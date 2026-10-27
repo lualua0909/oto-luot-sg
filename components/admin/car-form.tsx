@@ -15,6 +15,8 @@ import { useBrands } from "@/components/shared/brands-provider";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { Car, CarImage } from "@/lib/types";
 import { CarInput, createCar, updateCar } from "@/lib/firebase/cars";
+import { deleteImage } from "@/lib/blob/storage";
+import { reportAdminError } from "@/lib/client/error-log";
 
 export function CarForm({ car }: { car?: Car }) {
   const router = useRouter();
@@ -94,7 +96,20 @@ export function CarForm({ car }: { car?: Car }) {
     try {
       if (isEdit && car) {
         await updateCar(car.id, input);
-        toast.success("Đã cập nhật xe.");
+        const removedImages = (car.images ?? []).filter(
+          (previous) => !images.some((current) => current.url === previous.url),
+        );
+        const cleanupResults = await Promise.allSettled(removedImages.map((image) => deleteImage(image.url)));
+        const failedCleanups = cleanupResults.filter(
+          (result): result is PromiseRejectedResult => result.status === "rejected",
+        );
+        const failedCleanupCount = failedCleanups.length;
+        if (failedCleanupCount > 0) {
+          await Promise.all(failedCleanups.map((result) => reportAdminError("car.remove-image", result.reason)));
+          toast.warning(`Đã lưu xe, nhưng chưa xóa được ${failedCleanupCount} ảnh cũ khỏi kho.`);
+        } else {
+          toast.success("Đã cập nhật xe.");
+        }
       } else {
         await createCar(input);
         toast.success("Đã thêm xe mới.");
@@ -102,7 +117,9 @@ export function CarForm({ car }: { car?: Car }) {
       router.push("/admin/xe");
       router.refresh();
     } catch (err) {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại.");
+      await reportAdminError("car.save", err);
+      const message = err instanceof Error ? err.message : "Vui lòng thử lại.";
+      toast.error(`Không thể lưu thông tin xe: ${message}`);
     } finally {
       setSaving(false);
     }

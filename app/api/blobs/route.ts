@@ -1,5 +1,6 @@
 import { list, type ListBlobResultBlob } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { writeErrorLog } from "@/lib/server/error-log";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ export async function GET(): Promise<NextResponse> {
       blobs: blobs.map((b) => ({ url: b.url, pathname: b.pathname, size: b.size, uploadedAt: b.uploadedAt })),
     });
   } catch (error) {
+    await writeErrorLog("api.blobs.list", error);
     return NextResponse.json({ error: (error as Error).message }, { status: 400 });
   }
 }

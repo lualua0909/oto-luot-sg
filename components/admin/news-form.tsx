@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { NewsPost, CarImage } from "@/lib/types";
 import { NewsInput, createNews, updateNews } from "@/lib/firebase/news";
+import { reportAdminError } from "@/lib/client/error-log";
 
 export function NewsForm({ post }: { post?: NewsPost }) {
   const router = useRouter();
@@ -48,7 +49,8 @@ export function NewsForm({ post }: { post?: NewsPost }) {
       }
       router.push("/admin/tin-tuc");
       router.refresh();
-    } catch {
+    } catch (error) {
+      await reportAdminError("news.save", error);
       toast.error("Có lỗi xảy ra, vui lòng thử lại.");
     } finally {
       setSaving(false);

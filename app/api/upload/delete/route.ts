@@ -1,6 +1,7 @@
 import { del } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { requireUploadAdmin, UploadAuthError } from "@/lib/blob/admin-auth";
+import { writeErrorLog } from "@/lib/server/error-log";
 
 export const runtime = "nodejs";
 
@@ -26,6 +27,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     await del(url);
     return NextResponse.json({ ok: true });
   } catch (error) {
+    await writeErrorLog("api.upload.delete", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: error instanceof UploadAuthError ? 403 : 400 }
