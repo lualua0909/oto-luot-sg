@@ -29,7 +29,7 @@ export function SectionHeading({
 }) {
   const Heading = as;
   return (
-    <div className={cn("mb-8", align === "center" && "text-center", className)}>
+    <div data-reveal-stagger className={cn("mb-8", align === "center" && "text-center", className)}>
       {eyebrow && (
         <p
           className={cn(
@@ -37,7 +37,7 @@ export function SectionHeading({
             align === "center" && "justify-center"
           )}
         >
-          {Icon ? <Icon className="h-4 w-4" /> : <span className="h-px w-6 bg-accent/60" />}
+          {Icon ? <Icon className="h-4 w-4 transition-transform duration-500 hover:rotate-[20deg] hover:scale-125" /> : <span className="h-px w-6 bg-accent/60" />}
           {id ? <T id={`${id}.eyebrow`}>{eyebrow}</T> : eyebrow}
         </p>
       )}

@@ -9,6 +9,7 @@ import { FloatingSocialRail } from "@/components/shared/floating-social-rail";
 import { Toaster } from "sonner";
 import { ShowroomSettingsProvider } from "@/components/shared/showroom-settings-provider";
 import { BrandsProvider } from "@/components/shared/brands-provider";
+import { MotionProvider } from "@/components/shared/motion-provider";
 import { ContentProvider } from "@/components/shared/content-provider";
 import { AuthProvider } from "@/lib/firebase/auth-context";
 import { getContentTexts } from "@/lib/firebase/content";
@@ -127,11 +128,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ContentProvider initialTexts={contentTexts}>
             <ShowroomSettingsProvider>
               <BrandsProvider>
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-                <StickyContactBar />
-                <FloatingSocialRail />
+                <MotionProvider>
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  <StickyContactBar />
+                  <FloatingSocialRail />
+                </MotionProvider>
               </BrandsProvider>
             </ShowroomSettingsProvider>
           </ContentProvider>

@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, CalendarDays } from "lucide-react";
 import { NewsPost } from "@/lib/types";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export function NewsSection({ posts }: { posts: NewsPost[] }) {
   if (posts.length === 0) return null;
@@ -18,21 +19,23 @@ export function NewsSection({ posts }: { posts: NewsPost[] }) {
           title="Chia sẻ kinh nghiệm mua bán xe"
           description="Kinh nghiệm thực tế giúp bạn mua xe cũ an tâm hơn."
         />
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-reveal-stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {posts.slice(0, 4).map((post) => (
             <Link
               key={post.id}
               href={`/tin-tuc/${post.slug}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-lg"
+              data-tilt
+              className="group fx-spotlight flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[box-shadow,border-color] duration-300 hover:border-primary/25 hover:shadow-2xl"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+              <div className="fx-shine relative aspect-[16/10] overflow-hidden bg-muted">
                 {post.coverImage && (
                   <Image
-                    src={post.coverImage}
+                    src={imageSrc(post.coverImage)}
+                    unoptimized
                     alt={post.title}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
                 )}
               </div>
@@ -41,12 +44,12 @@ export function NewsSection({ posts }: { posts: NewsPost[] }) {
                   <CalendarDays className="h-3.5 w-3.5" />
                   {formatDate(post.createdAt)}
                 </span>
-                <h3 className="line-clamp-2 font-display text-sm font-semibold leading-snug">
+                <h3 className="line-clamp-2 font-display text-sm font-semibold leading-snug transition-colors group-hover:text-primary">
                   {post.title}
                 </h3>
                 <p className="line-clamp-2 text-xs text-muted-foreground">{post.excerpt}</p>
                 <span className="mt-auto flex items-center gap-1 pt-2 text-xs font-semibold text-primary">
-                  Đọc tiếp <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                  <span className="fx-underline">Đọc tiếp</span> <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>

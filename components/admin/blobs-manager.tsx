@@ -18,6 +18,7 @@ import { getAllCarsAdmin, updateCar } from "@/lib/firebase/cars";
 import { getAllNewsAdmin, updateNews } from "@/lib/firebase/news";
 import { saveBrand, subscribeToBrands } from "@/lib/firebase/brands";
 import { deleteImage, uploadImage } from "@/lib/blob/storage";
+import { imageSrc } from "@/lib/blob/image-url";
 
 interface BlobItem {
   url: string;
@@ -293,7 +294,7 @@ export function BlobsManager() {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
-                        <Image src={blob.url} alt="" fill sizes="64px" className="object-cover" />
+                        <Image src={imageSrc(blob.url)} unoptimized alt="" fill sizes="64px" className="object-cover" />
                       </div>
                       <p className="line-clamp-1 max-w-[16rem] break-all text-xs text-muted-foreground">{blob.pathname}</p>
                     </div>

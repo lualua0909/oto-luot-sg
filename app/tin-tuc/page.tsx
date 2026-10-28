@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export const revalidate = 60;
 
@@ -44,7 +45,8 @@ export default async function NewsListPage() {
               <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                 {post.coverImage && (
                   <Image
-                    src={post.coverImage}
+                    src={imageSrc(post.coverImage)}
+                    unoptimized
                     alt={post.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"

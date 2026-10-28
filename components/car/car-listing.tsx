@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BODY_TYPES } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
 import { T } from "@/components/shared/editable-text";
+import { imageSrc } from "@/lib/blob/image-url";
 
 const SORTS: { label: string; compare?: (a: Car, b: Car) => number }[] = [
   { label: "Mới đăng trước" },
@@ -86,7 +87,7 @@ export function CarListing({ cars, initialBrand }: { cars: Car[]; initialBrand?:
                     <span className="flex items-center gap-2">
                       {b.logoUrl && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={b.logoUrl} alt="" className="h-4 w-4 shrink-0 object-contain" />
+                        <img src={imageSrc(b.logoUrl)} loading="lazy" alt="" className="h-4 w-4 shrink-0 object-contain" />
                       )}
                       {b.name}
                     </span>

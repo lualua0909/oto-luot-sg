@@ -9,6 +9,7 @@ import { Phone } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export const revalidate = 60;
 
@@ -70,7 +71,7 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
 
       {post.coverImage && (
         <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-xl bg-muted">
-          <Image src={post.coverImage} alt={post.title} fill sizes="768px" className="object-cover" />
+          <Image src={imageSrc(post.coverImage)} unoptimized alt={post.title} fill sizes="768px" className="object-cover" />
         </div>
       )}
 

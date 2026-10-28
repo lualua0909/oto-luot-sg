@@ -10,16 +10,16 @@ import { ResilientCarImage } from "@/components/car/resilient-car-image";
 
 export function CarCard({ car }: { car: Car }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl">
+    <article data-tilt className="group fx-spotlight flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[box-shadow,border-color] duration-300 hover:border-primary/25 hover:shadow-2xl">
       <Link href={`/xe/${car.slug}`} className="contents">
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        <div className="fx-shine relative aspect-[4/3] w-full overflow-hidden bg-muted">
           {car.coverImage || car.images?.length ? (
             <ResilientCarImage
               sources={[car.coverImage, ...(car.images ?? []).map((image) => image.url)]}
               alt={car.title}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               fallback={
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                   <T id="car.card.noImage">Chưa có ảnh</T>
@@ -39,7 +39,7 @@ export function CarCard({ car }: { car: Car }) {
             </Badge>
           )}
           {car.status === "dang-coc" && <Badge variant="outline" className="absolute right-2.5 top-2.5 bg-white/95 shadow-sm">Đang cọc</Badge>}
-          <div className="absolute bottom-2.5 left-2.5 font-display text-lg font-bold leading-none text-white drop-shadow">
+          <div className="absolute bottom-2.5 left-2.5 origin-left font-display text-lg font-bold leading-none text-white drop-shadow transition-transform duration-300 group-hover:scale-110">
             {formatPriceTrieu(car.priceTrieu)}
           </div>
           <span className="absolute bottom-3 right-2.5 rounded-md bg-white/90 px-2 py-0.5 text-[11px] font-semibold text-primary">

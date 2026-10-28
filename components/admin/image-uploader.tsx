@@ -8,6 +8,7 @@ import { CarImage } from "@/lib/types";
 import { uploadImage } from "@/lib/blob/storage";
 import { cn } from "@/lib/utils";
 import { reportAdminError } from "@/lib/client/error-log";
+import { imageSrc } from "@/lib/blob/image-url";
 
 interface ImageUploaderProps {
   folder: "cars" | "news";
@@ -116,7 +117,7 @@ export function ImageUploader({ folder, images, onChange, coverImage, onCoverCha
                 coverImage === img.url ? "border-accent" : "border-transparent"
               )}
             >
-              <Image src={img.url} alt="" fill sizes="15vw" className="object-cover" />
+              <Image src={imageSrc(img.url)} unoptimized alt="" fill sizes="15vw" className="object-cover" />
               <div className="absolute inset-0 flex items-center justify-center gap-1.5 bg-black/0 opacity-0 transition-opacity group-hover:bg-black/40 group-hover:opacity-100">
                 {onCoverChange && (
                   <button

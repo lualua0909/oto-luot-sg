@@ -74,3 +74,81 @@
     text-wrap: balance;
   }
 }
+
+/* ---------- Hover effects ---------- */
+@layer components {
+  /* A diagonal light streak sweeps across on hover. */
+  .fx-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .fx-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .fx-shine:hover::after,
+  .group:hover .fx-shine::after {
+    transform: translateX(120%);
+  }
+
+  /* Soft spotlight that follows the pointer (position set by MotionProvider). */
+  .fx-spotlight {
+    position: relative;
+  }
+  .fx-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--accent) / 0.16), transparent 60%);
+  }
+  .fx-spotlight:hover::before {
+    opacity: 1;
+  }
+
+  /* Underline that grows from the left. */
+  .fx-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .fx-underline:hover,
+  .group:hover .fx-underline {
+    background-size: 100% 2px;
+  }
+
+  /* Slow zoom on the active hero slide. */
+  .fx-kenburns {
+    animation: kenburns 7s ease-out both;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-14deg); }
+  75% { transform: rotate(14deg); }
+}
+
+@keyframes kenburns {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-shine::after,
+  .fx-spotlight::before { display: none; }
+  .fx-kenburns { animation: none; }
+}

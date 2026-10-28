@@ -66,7 +66,7 @@ export function LeadForm({
 
   return (
     <section id={id} className="container-page scroll-mt-24 py-14">
-      <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border bg-card shadow-card lg:grid-cols-2">
+      <div data-reveal="up" className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border bg-card shadow-card lg:grid-cols-2">
         <div className="bg-primary p-8 text-primary-foreground sm:p-10">
           <SectionHeading
             id="home.lead"
@@ -78,13 +78,14 @@ export function LeadForm({
           />
           <a
             href={`tel:${site.phone}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground"
+            data-magnetic
+            className="group fx-shine inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground shadow-lg shadow-accent/30 transition-shadow hover:shadow-xl hover:shadow-accent/50"
           >
-            <Phone className="h-4 w-4" /> <T id="home.lead.callNow">Hoặc gọi ngay</T> {site.phoneDisplay}
+            <Phone className="h-4 w-4 group-hover:animate-[wiggle_.5s_ease-in-out_2]" /> <T id="home.lead.callNow">Hoặc gọi ngay</T> {site.phoneDisplay}
           </a>
         </div>
 
-        <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 p-8 sm:grid-cols-2 sm:p-10">
+        <form onSubmit={onSubmit} data-reveal-stagger className="grid grid-cols-1 gap-4 p-8 sm:grid-cols-2 sm:p-10">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="name"><T id="home.lead.labelName">Họ và tên</T></Label>
             <Input id="name" name="name" placeholder="Nguyễn Văn A" required />
@@ -120,7 +121,7 @@ export function LeadForm({
             <input type="checkbox" required className="mt-0.5 h-4 w-4 shrink-0 rounded border-border" />
             <span>Tôi đồng ý để showroom liên hệ về nội dung đã gửi và đã đọc <Link href="/chinh-sach/bao-mat-thong-tin" className="font-semibold text-primary hover:underline">chính sách bảo mật</Link>.</span>
           </label>
-          <Button type="submit" size="lg" variant="accent" disabled={loading} className="sm:col-span-2">
+          <Button type="submit" size="lg" variant="accent" disabled={loading} className="fx-shine shadow-lg shadow-accent/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/40 active:translate-y-0 sm:col-span-2">
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             <T id="home.lead.submit">Gửi đăng ký</T>
           </Button>

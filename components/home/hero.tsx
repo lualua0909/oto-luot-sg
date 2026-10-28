@@ -26,6 +26,8 @@ export function Hero() {
   return (
     <section className="group relative w-full overflow-hidden bg-primary">
       <div className="relative h-[50vh] w-full md:h-auto md:aspect-[21/9]">
+        {/* Taller than the frame so the parallax drift never shows an edge. */}
+        <div data-parallax="0.15" className="absolute inset-x-0 -inset-y-[12%]">
         {SLIDES.map((slide, i) => (
           <Image
             key={slide.src}
@@ -34,16 +36,18 @@ export function Hero() {
             fill
             priority={i === 0}
             sizes="100vw"
-            className={`object-cover transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
+            className={`object-cover transition-opacity duration-700 ${i === index ? "fx-kenburns opacity-100" : "opacity-0"}`}
           />
         ))}
+        </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
       </div>
 
       <button
         type="button"
         onClick={() => go(index - 1)}
         aria-label="Ảnh trước"
-        className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition-colors hover:bg-black/50 md:opacity-0 md:group-hover:opacity-100"
+        className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition-colors hover:scale-110 hover:bg-black/50 md:-translate-x-4 md:opacity-0 md:group-hover:translate-x-0 md:group-hover:opacity-100 [transition:opacity_.3s,transform_.3s,background-color_.2s]"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
@@ -51,7 +55,7 @@ export function Hero() {
         type="button"
         onClick={() => go(index + 1)}
         aria-label="Ảnh tiếp theo"
-        className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition-colors hover:bg-black/50 md:opacity-0 md:group-hover:opacity-100"
+        className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition-colors hover:scale-110 hover:bg-black/50 md:translate-x-4 md:opacity-0 md:group-hover:translate-x-0 md:group-hover:opacity-100 [transition:opacity_.3s,transform_.3s,background-color_.2s]"
       >
         <ChevronRight className="h-5 w-5" />
       </button>

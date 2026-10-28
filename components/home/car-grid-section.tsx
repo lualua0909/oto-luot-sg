@@ -14,16 +14,16 @@ function CarSlide({ car }: { car: Car }) {
   return (
     <Link
       href={`/xe/${car.slug}`}
-      className="group w-[248px] shrink-0 snap-start overflow-hidden rounded-xl bg-card shadow-lg transition-transform duration-200 hover:-translate-y-1 sm:w-[268px]"
+      className="group fx-spotlight w-[248px] shrink-0 snap-start overflow-hidden rounded-xl bg-card shadow-lg ring-2 ring-transparent transition-[box-shadow] duration-300 hover:shadow-2xl hover:ring-accent sm:w-[268px]"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+      <div className="fx-shine relative aspect-[4/3] w-full overflow-hidden bg-muted">
         {car.coverImage || car.images?.length ? (
           <ResilientCarImage
             sources={[car.coverImage, ...(car.images ?? []).map((image) => image.url)]}
             alt={car.title}
             fill
             sizes="270px"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             fallback={
               <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                 <T id="car.card.noImage">Chưa có ảnh</T>
@@ -45,7 +45,7 @@ function CarSlide({ car }: { car: Car }) {
           <span className="text-sm font-medium text-muted-foreground">{car.year}</span>
           {car.status === "dang-coc" && <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[11px] font-semibold text-accent">Đang cọc</span>}
         </div>
-        <h3 className="line-clamp-1 font-display text-lg font-bold text-primary">{car.title}</h3>
+        <h3 className="line-clamp-1 font-display text-lg font-bold text-primary transition-colors group-hover:text-accent">{car.title}</h3>
         <p className="font-semibold text-destructive">
           {formatPriceTrieu(car.priceTrieu)} <span className="text-xs text-muted-foreground">VNĐ</span>
         </p>
@@ -100,8 +100,8 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
 
   return (
     <section className="container-page py-14">
-      <div className="relative rounded-3xl bg-primary px-5 py-8 text-primary-foreground sm:px-8 sm:py-10">
-        <h2 className="font-display text-xl font-bold uppercase tracking-wide text-accent sm:text-2xl">
+      <div data-reveal="scale" className="relative rounded-3xl bg-primary px-5 py-8 text-primary-foreground sm:px-8 sm:py-10">
+        <h2 data-reveal="left" className="font-display text-xl font-bold uppercase tracking-wide text-accent sm:text-2xl">
           <T id="home.cars.title">Xe đang bán</T>
         </h2>
 
@@ -135,7 +135,8 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
             <div
               ref={trackRef}
               onScroll={onScroll}
-              className="mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              data-reveal-stagger
+              className="mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {visible.map((car) => (
                 <CarSlide key={car.id} car={car} />
@@ -148,7 +149,7 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
                   type="button"
                   onClick={() => scrollBy(-1)}
                   aria-label="Xem xe trước"
-                  className="absolute left-1 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/30 md:flex"
+                  className="absolute left-1 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-all hover:scale-110 hover:bg-accent md:flex"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -156,7 +157,7 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
                   type="button"
                   onClick={() => scrollBy(1)}
                   aria-label="Xem xe tiếp theo"
-                  className="absolute right-1 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/30 md:flex"
+                  className="absolute right-1 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-all hover:scale-110 hover:bg-accent md:flex"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -168,8 +169,8 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
                       type="button"
                       onClick={() => goTo(i)}
                       aria-label={`Trang ${i + 1}`}
-                      className={`h-2 w-2 rounded-full transition-colors ${
-                        i === page ? "bg-accent" : "bg-white/30 hover:bg-white/50"
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        i === page ? "w-6 bg-accent" : "w-2 bg-white/30 hover:bg-white/60"
                       }`}
                     />
                   ))}
@@ -182,9 +183,10 @@ export function CarGridSection({ cars }: { cars: Car[] }) {
         <div className="mt-7 text-center">
           <Link
             href="/mua-ban-o-to"
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-accent-foreground shadow-lg transition-transform hover:scale-105"
+            data-magnetic
+            className="group fx-shine inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-shadow hover:shadow-xl hover:shadow-accent/50"
           >
-            <T id="home.cars.viewAll">Xem tất cả</T> <ArrowRight className="h-4 w-4" />
+            <T id="home.cars.viewAll">Xem tất cả</T> <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
           </Link>
         </div>
       </div>

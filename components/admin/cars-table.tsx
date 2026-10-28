@@ -18,6 +18,7 @@ import { Car } from "@/lib/types";
 import { getAllCarsAdmin, deleteCar } from "@/lib/firebase/cars";
 import { formatPriceTrieu } from "@/lib/utils";
 import { deleteImage } from "@/lib/blob/storage";
+import { imageSrc } from "@/lib/blob/image-url";
 
 const STATUS_LABEL: Record<Car["status"], { label: string; variant: "success" | "secondary" | "outline" }> = {
   "dang-ban": { label: "Đang bán", variant: "success" },
@@ -105,7 +106,7 @@ export function CarsTable() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
-                      {car.coverImage && <Image src={car.coverImage} alt="" fill sizes="64px" className="object-cover" />}
+                      {car.coverImage && <Image src={imageSrc(car.coverImage)} unoptimized alt="" fill sizes="64px" className="object-cover" />}
                     </div>
                     <div>
                       <p className="line-clamp-1 text-sm font-medium">{car.title}</p>

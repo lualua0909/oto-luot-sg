@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
+import { imageSrc, isProxiedImage } from "@/lib/blob/image-url";
 
 type ResilientCarImageProps = Omit<ImageProps, "src" | "onError"> & {
   sources: Array<string | null | undefined>;
@@ -11,8 +12,8 @@ type ResilientCarImageProps = Omit<ImageProps, "src" | "onError"> & {
 
 /**
  * Car photos live in Vercel Blob and have already been compressed on upload.
- * Loading them directly avoids an extra, occasionally stale Next image-cache
- * hop. If a saved URL was deleted, try the car's other photos before showing a
+ * They load through /api/img (browser-cached only) instead of the Next image
+ * optimizer, so the server/CDN never keeps or pre-fetches copies. If a saved URL was deleted, try the car's other photos before showing a
  * clean fallback instead of the browser's broken-image icon.
  */
 export function ResilientCarImage({
@@ -33,17 +34,16 @@ export function ResilientCarImage({
 
   useEffect(() => setIndex(0), [sourceKey]);
 
-  const src = candidates[index];
-  if (!src) return fallback ?? null;
-
-  const isVercelBlob = src.includes(".public.blob.vercel-storage.com/");
+  const original = candidates[index];
+  if (!original) return fallback ?? null;
+  const src = imageSrc(original);
 
   return (
     <Image
       {...props}
       key={src}
       src={src}
-      unoptimized={unoptimized ?? isVercelBlob}
+      unoptimized={unoptimized ?? isProxiedImage(src)}
       onError={() => {
         if (index + 1 < candidates.length) {
           setIndex(index + 1);

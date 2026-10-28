@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { useBrands } from "@/components/shared/brands-provider";
 import { T } from "@/components/shared/editable-text";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export function BrandGrid() {
   const brands = useBrands();
@@ -21,15 +22,16 @@ export function BrandGrid() {
         />
         <Link
           href="/mua-ban-o-to"
-          className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline sm:flex"
+          data-reveal="right"
+          className="group hidden shrink-0 items-center gap-1 text-sm font-semibold text-primary sm:flex"
         >
-          <T id="home.brands.viewAll">Xem tất cả hãng</T> <ArrowRight className="h-4 w-4" />
+          <span className="fx-underline"><T id="home.brands.viewAll">Xem tất cả hãng</T></span> <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
         </Link>
       </div>
 
       {/* Infinite marquee: the list is rendered twice and the track slides by half
           its width, so the second copy lands exactly where the first started. */}
-      <div className="group relative mt-6 overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+      <div data-reveal="up" className="group relative mt-6 overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
         <div className="flex w-max animate-marquee items-stretch gap-4 group-hover:[animation-play-state:paused]">
           {[...brands, ...brands].map((b, i) => (
             <Link
@@ -37,16 +39,16 @@ export function BrandGrid() {
               href={`/mua-ban-o-to/${b.slug}`}
               aria-hidden={i >= brands.length}
               tabIndex={i >= brands.length ? -1 : undefined}
-              className="flex w-[132px] shrink-0 flex-col items-center justify-center gap-3 rounded-2xl bg-card p-5 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl sm:w-[148px]"
+              className="group/brand fx-shine flex w-[132px] shrink-0 flex-col items-center justify-center gap-3 rounded-2xl bg-card p-5 text-center shadow-sm ring-1 ring-transparent transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:ring-accent/50 sm:w-[148px]"
             >
               {b.logoUrl ? (
-                <img src={b.logoUrl} alt="" className="h-16 w-16 object-contain" />
+                <img src={imageSrc(b.logoUrl)} loading="lazy" alt="" className="h-16 w-16 object-contain grayscale-[35%] transition-all duration-500 group-hover/brand:-rotate-6 group-hover/brand:scale-[1.15] group-hover/brand:grayscale-0" />
               ) : (
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary font-display text-base font-bold text-primary">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary font-display text-base font-bold text-primary transition-all duration-500 group-hover/brand:rotate-[360deg] group-hover/brand:bg-primary group-hover/brand:text-primary-foreground">
                   {b.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
-              <span className="text-sm font-bold leading-tight text-foreground">{b.name}</span>
+              <span className="text-sm font-bold leading-tight text-foreground transition-colors group-hover/brand:text-accent">{b.name}</span>
             </Link>
           ))}
         </div>

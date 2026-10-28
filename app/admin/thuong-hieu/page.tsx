@@ -12,6 +12,7 @@ import { useBrands } from "@/components/shared/brands-provider";
 import { saveBrand } from "@/lib/firebase/brands";
 import { uploadImage } from "@/lib/blob/storage";
 import type { Brand } from "@/lib/types";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export default function AdminBrandsPage() {
   const brands = useBrands();
@@ -77,7 +78,7 @@ export default function AdminBrandsPage() {
           <Card key={brand.slug} className="group overflow-hidden">
             <CardContent className="flex min-h-44 flex-col items-center justify-center gap-3 p-4 text-center">
               {brand.logoUrl ? (
-                <img src={brand.logoUrl} alt="" className="h-16 w-16 rounded-full object-contain" />
+                <img src={imageSrc(brand.logoUrl)} alt="" className="h-16 w-16 rounded-full object-contain" />
               ) : (
                 <span className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary font-display text-lg font-bold text-primary">
                   {brand.name.slice(0, 2).toUpperCase()}
@@ -106,7 +107,7 @@ export default function AdminBrandsPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-4 rounded-lg border border-border bg-muted/30 p-4">
                 {draft.logoUrl ? (
-                  <img src={draft.logoUrl} alt="Xem trước logo" className="h-16 w-16 rounded-full bg-background object-contain" />
+                  <img src={imageSrc(draft.logoUrl)} alt="Xem trước logo" className="h-16 w-16 rounded-full bg-background object-contain" />
                 ) : (
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary font-display text-lg font-bold text-primary">{draft.name.slice(0, 2).toUpperCase()}</span>
                 )}

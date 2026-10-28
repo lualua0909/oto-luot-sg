@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { NewsPost } from "@/lib/types";
 import { getAllNewsAdmin, deleteNews } from "@/lib/firebase/news";
 import { formatDate } from "@/lib/utils";
+import { imageSrc } from "@/lib/blob/image-url";
 
 export function NewsTable() {
   const [posts, setPosts] = useState<NewsPost[]>([]);
@@ -83,7 +84,7 @@ export function NewsTable() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
-                      {post.coverImage && <Image src={post.coverImage} alt="" fill sizes="64px" className="object-cover" />}
+                      {post.coverImage && <Image src={imageSrc(post.coverImage)} unoptimized alt="" fill sizes="64px" className="object-cover" />}
                     </div>
                     <p className="line-clamp-2 text-sm font-medium">{post.title}</p>
                   </div>
