@@ -12,8 +12,6 @@ import { getPublishedNews } from "@/lib/firebase/news";
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Ô Tô Lướt Sài Gòn | Xe Cũ TPHCM Đang Bán",
   description: "Xe ô tô lướt, xe cũ có sẵn tại TP.HCM. Xem xe thực tế, đối chiếu giấy tờ, hỗ trợ kiểm tra, sang tên, thu mua và trả góp.",

@@ -32,6 +32,11 @@ const body = Inter({
   display: "swap",
 });
 
+// Never cache CMS/Firestore data: every request queries directly.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {

@@ -39,10 +39,6 @@ const POLICIES: Record<string, { title: string; content: string[] }> = {
   },
 };
 
-export function generateStaticParams() {
-  return Object.keys(POLICIES).map((slug) => ({ slug }));
-}
-
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const p = POLICIES[params.slug];
   const url = absoluteUrl(`/chinh-sach/${params.slug}`);

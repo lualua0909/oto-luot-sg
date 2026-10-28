@@ -4,8 +4,6 @@ import { CarListing } from "@/components/car/car-listing";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { absoluteUrl } from "@/lib/seo";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Mua bán xe ô tô cũ TPHCM - Xe đang có",
   description:

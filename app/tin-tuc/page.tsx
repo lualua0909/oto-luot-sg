@@ -8,8 +8,6 @@ import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
 import { imageSrc } from "@/lib/blob/image-url";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Kiến thức mua bán ô tô",
   description: "Kinh nghiệm, thủ tục và mẹo kiểm tra xe ô tô cũ từ Ô TÔ LƯỚT SÀI GÒN.",

@@ -16,8 +16,6 @@ import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { absoluteUrl, cleanSeoText, compactDescription } from "@/lib/seo";
 import { TrackRecentlyViewed } from "@/components/car/recently-viewed";
 
-export const revalidate = 60;
-
 export async function generateMetadata({
   params,
 }: {

@@ -11,8 +11,6 @@ import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
 import { imageSrc } from "@/lib/blob/image-url";
 
-export const revalidate = 60;
-
 export async function generateMetadata({
   params,
 }: {

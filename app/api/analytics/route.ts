@@ -15,7 +15,7 @@ async function aggregate(by: string, since: string, until: string, limit?: numbe
 
   const res = await fetch(`${API}?${params}`, {
     headers: { Authorization: `Bearer ${process.env.VERCEL_ACCESS_TOKEN}` },
-    next: { revalidate: 600 },
+    cache: "no-store",
   });
   if (!res.ok) throw new Error(`Vercel Analytics API ${res.status}: ${await res.text()}`);
   return (await res.json()).data;

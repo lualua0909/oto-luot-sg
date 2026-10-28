@@ -15,10 +15,6 @@ const ICONS = {
   "tra-gop": Wallet,
 };
 
-export function generateStaticParams() {
-  return Object.keys(SERVICE_PAGES).map((slug) => ({ slug }));
-}
-
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const service = SERVICE_PAGES[params.slug as ServiceSlug];
   if (!service) return {};

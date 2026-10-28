@@ -5,12 +5,6 @@ import { BrandListingContent } from "@/components/car/brand-listing-content";
 import { BRANDS } from "@/lib/constants";
 import { absoluteUrl } from "@/lib/seo";
 
-export const revalidate = 60;
-
-export function generateStaticParams() {
-  return BRANDS.map((b) => ({ brand: b.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: {
