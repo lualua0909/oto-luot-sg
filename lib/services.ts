@@ -3,6 +3,7 @@ export const SERVICE_PAGES = {
     title: "Kiểm tra xe ô tô cũ tại TP.HCM",
     description: "Hỗ trợ kiểm tra tình trạng xe cũ trước khi mua: giấy tờ, thân vỏ, động cơ, hộp số, khung gầm và vận hành thực tế.",
     eyebrow: "Kiểm tra trước khi mua",
+    serviceType: "Kiểm tra xe ô tô cũ",
     intro: "Một buổi kiểm tra có mục tiêu giúp người mua hiểu chiếc xe đang ở tình trạng nào, hạng mục nào cần lưu ý và thông tin nào cần đối chiếu trước khi giao dịch.",
     topic: "Kiểm tra xe trước khi mua",
     benefits: [
@@ -28,6 +29,7 @@ export const SERVICE_PAGES = {
     title: "Thu mua xe ô tô cũ tại TP.HCM",
     description: "Nhận thông tin, kiểm tra và định giá xe cũ tại TP.HCM. Thỏa thuận giá minh bạch, hỗ trợ hồ sơ và quy trình thanh toán rõ ràng.",
     eyebrow: "Bán xe nhanh, biết rõ quy trình",
+    serviceType: "Thu mua ô tô cũ",
     intro: "Giá thu mua chỉ được chốt sau khi xem xe và đối chiếu giấy tờ. Thông tin ban đầu giúp showroom đưa ra khoảng tham khảo và chuẩn bị buổi kiểm tra hiệu quả hơn.",
     topic: "Bán / ký gửi xe",
     benefits: [
@@ -53,6 +55,7 @@ export const SERVICE_PAGES = {
     title: "Mua ô tô cũ trả góp tại TP.HCM",
     description: "Tính thử khoản trả trước và thanh toán hàng tháng khi mua xe cũ. Tư vấn hồ sơ vay theo điều kiện thực tế của ngân hàng.",
     eyebrow: "Tính trước, quyết định sau",
+    serviceType: "Tư vấn mua ô tô cũ trả góp",
     intro: "Khả năng vay, lãi suất và thời hạn phụ thuộc chiếc xe, ngân hàng và hồ sơ người vay. Công cụ trên website chỉ dùng để lập ngân sách ban đầu.",
     topic: "Ô tô trả góp",
     benefits: [

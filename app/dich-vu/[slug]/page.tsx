@@ -8,6 +8,9 @@ import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { SERVICE_PAGES, type ServiceSlug } from "@/lib/services";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { breadcrumbNode, businessRefNode, serviceNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
 
 const ICONS = {
   "kiem-tra-xe-o-to-cu": ClipboardCheck,
@@ -31,34 +34,24 @@ export default async function ServicePage({ params }: { params: { slug: string }
   const slug = params.slug as ServiceSlug;
   const service = SERVICE_PAGES[slug];
   if (!service) notFound();
-  const site = await getShowroomSettings().catch(() => null);
+  const [site, business] = await Promise.all([getShowroomSettings().catch(() => null), getBusinessProfile()]);
   const Icon = ICONS[slug];
-  const url = absoluteUrl(`/dich-vu/${slug}`);
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "@id": `${url}#service`,
-      name: service.title,
-      description: service.description,
-      url,
-      areaServed: { "@type": "City", name: "Thành phố Hồ Chí Minh" },
-      provider: { "@id": `${absoluteUrl("/")}/#showroom` },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Trang chủ", item: absoluteUrl("/") },
-        { "@type": "ListItem", position: 2, name: "Dịch vụ", item: absoluteUrl("/dich-vu") },
-        { "@type": "ListItem", position: 3, name: service.title, item: url },
-      ],
-    },
-  ];
-
+  const path = `/dich-vu/${slug}`;
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessRefNode(business),
+          webPageNode({ path, name: service.title, description: service.description, mainEntity: ids.service(path), about: ids.service(path), hasBreadcrumb: true }),
+          serviceNode({ path, name: service.title, description: service.description, serviceType: service.serviceType }),
+          breadcrumbNode(path, [
+            { name: "Trang chủ", path: "/" },
+            { name: "Dịch vụ", path: "/dich-vu" },
+            { name: service.title, path },
+          ]),
+        ]}
+      />
       <section className="bg-primary py-12 text-primary-foreground sm:py-16">
         <div className="container-page">
           <nav className="mb-8 flex items-center gap-1 text-xs text-primary-foreground/60">

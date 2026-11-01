@@ -9,6 +9,9 @@ import { Phone } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { blogPostingNode, breadcrumbNode, businessRefNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
 import { imageSrc } from "@/lib/blob/image-url";
 
 export async function generateMetadata({
@@ -24,40 +27,44 @@ export async function generateMetadata({
     description: post.excerpt,
     alternates: { canonical: url },
     openGraph: { type: "article", url, images: post.coverImage ? [post.coverImage] : [] },
+    // Unpublished drafts stay reachable for preview but must not be indexed.
+    ...(post.isPublished ? {} : { robots: { index: false, follow: false } }),
   };
 }
 
 export default async function NewsDetailPage({ params }: { params: { slug: string } }) {
   const post = await getNewsBySlug(params.slug).catch(() => null);
   if (!post) notFound();
-  const url = absoluteUrl(`/tin-tuc/${post.slug}`);
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: post.title,
-      description: post.excerpt,
-      image: post.coverImage ? [post.coverImage] : undefined,
-      datePublished: new Date(post.createdAt).toISOString(),
-      dateModified: new Date(post.updatedAt).toISOString(),
-      mainEntityOfPage: url,
-      author: { "@type": "Organization", name: SITE.fullName, url: absoluteUrl("/") },
-      publisher: { "@id": `${absoluteUrl("/")}/#showroom` },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Trang chủ", item: absoluteUrl("/") },
-        { "@type": "ListItem", position: 2, name: "Kiến thức", item: absoluteUrl("/tin-tuc") },
-        { "@type": "ListItem", position: 3, name: post.title, item: url },
-      ],
-    },
-  ];
+  const path = `/tin-tuc/${post.slug}`;
+  const business = await getBusinessProfile();
+  // Drafts are reachable by URL but are not published content → no schema.
+  const graph = post.isPublished
+    ? [
+        websiteNode(business),
+        businessRefNode(business),
+        webPageNode({
+          path,
+          name: post.title,
+          description: post.excerpt,
+          image: post.coverImage,
+          about: null,
+          mainEntity: ids.article(path),
+          hasBreadcrumb: true,
+          datePublished: post.createdAt,
+          dateModified: post.updatedAt,
+        }),
+        blogPostingNode(post, path, business),
+        breadcrumbNode(path, [
+          { name: "Trang chủ", path: "/" },
+          { name: "Kiến thức", path: "/tin-tuc" },
+          { name: post.title, path },
+        ]),
+      ]
+    : [];
 
   return (
     <article className="container-page max-w-3xl py-10">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd graph={graph} />
       <nav className="mb-5 flex items-center gap-1 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-primary"><T id="breadcrumb.home">Trang chủ</T></Link>
         <span>/</span>

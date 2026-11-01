@@ -5,12 +5,17 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
+
+const aboutDescription = (name: string) => `Tìm hiểu về ${name} — showroom ô tô lướt uy tín tại TP.HCM.`;
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getShowroomSettings();
   return {
     title: "Giới thiệu",
-    description: `Tìm hiểu về ${site.fullName} — showroom ô tô lướt uy tín tại TP.HCM.`,
+    description: aboutDescription(site.fullName),
     alternates: { canonical: absoluteUrl("/gioi-thieu") },
     openGraph: { url: absoluteUrl("/gioi-thieu") },
   };
@@ -24,9 +29,22 @@ const VALUES = [
 ];
 
 export default async function AboutPage() {
-  const site = await getShowroomSettings();
+  const [site, business] = await Promise.all([getShowroomSettings(), getBusinessProfile()]);
   return (
     <div className="container-page py-10">
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessNode(business),
+          webPageNode({
+            path: "/gioi-thieu",
+            type: "AboutPage",
+            name: `Giới thiệu ${site.fullName}`,
+            description: aboutDescription(site.fullName),
+            image: "/images/about-team.jpg",
+          }),
+        ]}
+      />
       <SectionHeading
         as="h1"
         id="about.heading"

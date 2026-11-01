@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { T } from "@/components/shared/editable-text";
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl, compactDescription } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessRefNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
 
 const POLICIES: Record<string, { title: string; content: string[] }> = {
   "mua-hang-thanh-toan": {
@@ -42,15 +45,24 @@ const POLICIES: Record<string, { title: string; content: string[] }> = {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const p = POLICIES[params.slug];
   const url = absoluteUrl(`/chinh-sach/${params.slug}`);
-  return p ? { title: p.title, alternates: { canonical: url }, openGraph: { url } } : {};
+  // Own description per policy page instead of inheriting the home page one.
+  return p ? { title: p.title, description: compactDescription(p.content[0]), alternates: { canonical: url }, openGraph: { url } } : {};
 }
 
-export default function PolicyPage({ params }: { params: { slug: string } }) {
+export default async function PolicyPage({ params }: { params: { slug: string } }) {
   const policy = POLICIES[params.slug];
   if (!policy) notFound();
+  const business = await getBusinessProfile();
 
   return (
     <div className="container-page max-w-2xl py-10">
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessRefNode(business),
+          webPageNode({ path: `/chinh-sach/${params.slug}`, name: policy.title, description: policy.content[0] }),
+        ]}
+      />
       <h1 className="font-display text-2xl font-bold">
         <T id={`policy.${params.slug}.title`}>{policy.title}</T>
       </h1>

@@ -5,11 +5,16 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { T } from "@/components/shared/editable-text";
 import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
+import { SERVICE_PAGES, type ServiceSlug } from "@/lib/services";
+
+const PAGE_DESCRIPTION = "Dịch vụ kiểm tra xe ô tô cũ, thu mua xe ô tô cũ và hỗ trợ trả góp tại Ô TÔ LƯỚT SÀI GÒN.";
 
 export const metadata: Metadata = {
   title: "Dịch vụ thu xe",
-  description:
-    "Dịch vụ kiểm tra xe ô tô cũ, thu mua xe ô tô cũ và hỗ trợ trả góp tại Ô TÔ LƯỚT SÀI GÒN.",
+  description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/dich-vu") },
   openGraph: { url: absoluteUrl("/dich-vu") },
 };
@@ -59,9 +64,23 @@ const SERVICES = [
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const business = await getBusinessProfile();
+  const listId = ids.itemList("/dich-vu");
   return (
     <div className="container-page py-10">
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessRefNode(business),
+          webPageNode({ path: "/dich-vu", type: "CollectionPage", name: "Dịch vụ thu xe & hỗ trợ khách hàng", description: PAGE_DESCRIPTION, mainEntity: listId }),
+          itemListNode(
+            "/dich-vu",
+            "Dịch vụ của Ô TÔ LƯỚT SÀI GÒN",
+            SERVICES.map((s) => ({ name: SERVICE_PAGES[s.href.split("/").pop() as ServiceSlug].title, path: s.href }))
+          ),
+        ]}
+      />
       <SectionHeading
         as="h1"
         id="services.heading"

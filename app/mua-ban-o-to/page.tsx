@@ -3,33 +3,33 @@ import { getPublishedCars } from "@/lib/firebase/cars";
 import { CarListing } from "@/components/car/car-listing";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
+
+const PAGE_DESCRIPTION = "Danh sách xe ô tô lướt đang bán tại Ô TÔ LƯỚT SÀI GÒN — xe kiểm tra kỹ, giấy tờ minh bạch, giá tốt.";
 
 export const metadata: Metadata = {
   title: "Mua bán xe ô tô cũ TPHCM - Xe đang có",
-  description:
-    "Danh sách xe ô tô lướt đang bán tại Ô TÔ LƯỚT SÀI GÒN — xe kiểm tra kỹ, giấy tờ minh bạch, giá tốt.",
+  description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/mua-ban-o-to") },
   openGraph: { url: absoluteUrl("/mua-ban-o-to") },
 };
 
 export default async function CarListingPage() {
-  const cars = await getPublishedCars(200).catch(() => []);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Xe ô tô cũ đang bán tại TP.HCM",
-    numberOfItems: cars.length,
-    itemListElement: cars.map((car, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: car.title,
-      url: absoluteUrl(`/xe/${car.slug}`),
-    })),
-  };
+  const [cars, business] = await Promise.all([getPublishedCars(200).catch(() => []), getBusinessProfile()]);
+  const listName = "Xe ô tô cũ đang bán tại TP.HCM";
 
   return (
     <div className="container-page py-10">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessRefNode(business),
+          webPageNode({ path: "/mua-ban-o-to", type: "CollectionPage", name: listName, description: PAGE_DESCRIPTION, mainEntity: ids.itemList("/mua-ban-o-to") }),
+          itemListNode("/mua-ban-o-to", listName, cars.map((car) => ({ name: car.title, path: `/xe/${car.slug}` }))),
+        ]}
+      />
       <SectionHeading
         as="h1"
         id="cars.heading"

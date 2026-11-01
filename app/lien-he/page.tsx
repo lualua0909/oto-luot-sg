@@ -5,21 +5,38 @@ import { LeadForm } from "@/components/home/lead-form";
 import { getShowroomSettings } from "@/lib/firebase/settings";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
+
+const contactDescription = (name: string, phone: string, address: string) => `Liên hệ ${name} — hotline ${phone}, địa chỉ ${address}.`;
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getShowroomSettings();
   return {
     title: "Liên hệ",
-    description: `Liên hệ ${site.fullName} — hotline ${site.phoneDisplay}, địa chỉ ${site.address}.`,
+    description: contactDescription(site.fullName, site.phoneDisplay, site.address),
     alternates: { canonical: absoluteUrl("/lien-he") },
     openGraph: { url: absoluteUrl("/lien-he") },
   };
 }
 
 export default async function ContactPage() {
-  const site = await getShowroomSettings();
+  const [site, business] = await Promise.all([getShowroomSettings(), getBusinessProfile()]);
   return (
     <div>
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessNode(business),
+          webPageNode({
+            path: "/lien-he",
+            type: "ContactPage",
+            name: `Liên hệ ${site.fullName}`,
+            description: contactDescription(site.fullName, site.phoneDisplay, site.address),
+          }),
+        ]}
+      />
       <div className="container-page py-10">
         <SectionHeading
           as="h1"

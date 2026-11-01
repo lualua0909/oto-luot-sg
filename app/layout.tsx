@@ -12,8 +12,7 @@ import { BrandsProvider } from "@/components/shared/brands-provider";
 import { MotionProvider } from "@/components/shared/motion-provider";
 import { ContentProvider } from "@/components/shared/content-provider";
 import { AuthProvider } from "@/lib/firebase/auth-context";
-import { getContentTexts } from "@/lib/firebase/content";
-import { getShowroomSettings } from "@/lib/firebase/settings";
+import { getCachedContentTexts } from "@/lib/structured-data/business";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteUrl } from "@/lib/seo";
@@ -79,40 +78,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const contentTexts = await getContentTexts().catch(() => ({}));
-  const showroomSettings = await getShowroomSettings().catch(() => null);
-  const site = showroomSettings ?? SITE;
-  const siteUrl = getSiteUrl();
-  const sameAs = [site.facebook, site.zalo, site.tiktok1, site.tiktok2, site.googleBusinessUrl].filter(Boolean);
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AutoDealer",
-    "@id": `${siteUrl}/#showroom`,
-    name: site.fullName,
-    alternateName: site.name,
-    url: siteUrl,
-    telephone: site.phone,
-    ...(site.taxCode ? { taxID: site.taxCode } : {}),
-    ...(site.email ? { email: site.email } : {}),
-    image: `${siteUrl}/images/og-cover.jpg`,
-    logo: `${siteUrl}/images/logo.png`,
-    priceRange: "₫₫",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: site.address,
-      addressLocality: "Hồ Chí Minh",
-      addressCountry: "VN",
-    },
-    areaServed: { "@type": "City", name: "Thành phố Hồ Chí Minh" },
-    openingHoursSpecification: [{
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "07:30",
-      closes: "19:00",
-    }],
-    ...(sameAs.length ? { sameAs } : {}),
-  };
+  // JSON-LD is rendered per page (components/seo/json-ld.tsx), not here,
+  // so 404 and /admin pages carry no structured data.
+  const contentTexts = await getCachedContentTexts();
 
   return (
     <html lang="vi" className={`${display.variable} ${body.variable}`}>
@@ -125,10 +93,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className="flex min-h-screen flex-col font-sans">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         <AuthProvider>
           <ContentProvider initialTexts={contentTexts}>
             <ShowroomSettingsProvider>

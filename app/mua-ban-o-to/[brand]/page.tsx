@@ -4,6 +4,12 @@ import { getCarsByBrand } from "@/lib/firebase/cars";
 import { BrandListingContent } from "@/components/car/brand-listing-content";
 import { BRANDS } from "@/lib/constants";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { breadcrumbNode, businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
+
+const brandDescription = (name: string) =>
+  `Danh sách xe ${name} cũ, xe lướt đang có tại showroom TP.HCM. Xem giá, năm sản xuất, số km và thông tin từng xe.`;
 
 export async function generateMetadata({
   params,
@@ -16,7 +22,7 @@ export async function generateMetadata({
   const url = absoluteUrl(`/mua-ban-o-to/${brand.slug}`);
   return {
     title: `Xe ${brand.name} cũ tại TPHCM - Xe đang bán`,
-    description: `Danh sách xe ${brand.name} cũ, xe lướt đang có tại showroom TP.HCM. Xem giá, năm sản xuất, số km và thông tin từng xe.`,
+    description: brandDescription(brand.name),
     alternates: { canonical: url },
     openGraph: { url },
     robots: cars.length > 0 ? { index: true, follow: true } : { index: false, follow: true },
@@ -27,19 +33,23 @@ export default async function BrandListingPage({ params }: { params: { brand: st
   const brand = BRANDS.find((b) => b.slug === params.brand);
   if (!brand) notFound();
 
-  const cars = await getCarsByBrand(params.brand).catch(() => []);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `Xe ${brand.name} cũ tại TP.HCM`,
-    numberOfItems: cars.length,
-    itemListElement: cars.map((car, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: car.title,
-      url: absoluteUrl(`/xe/${car.slug}`),
-    })),
-  };
+  const [cars, business] = await Promise.all([getCarsByBrand(params.brand).catch(() => []), getBusinessProfile()]);
+  const path = `/mua-ban-o-to/${brand.slug}`;
+  const name = `Xe ${brand.name} cũ tại TP.HCM`;
+  // Brand pages without inventory are noindex (see generateMetadata) → no schema.
+  const graph = cars.length > 0
+    ? [
+        websiteNode(business),
+        businessRefNode(business),
+        webPageNode({ path, type: "CollectionPage" as const, name, description: brandDescription(brand.name), mainEntity: ids.itemList(path), hasBreadcrumb: true }),
+        itemListNode(path, name, cars.map((car) => ({ name: car.title, path: `/xe/${car.slug}` }))),
+        breadcrumbNode(path, [
+          { name: "Trang chủ", path: "/" },
+          { name: "Mua bán ô tô", path: "/mua-ban-o-to" },
+          { name: brand.name, path },
+        ]),
+      ]
+    : [];
 
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /><BrandListingContent brandSlug={brand.slug} cars={cars} /></>;
+  return <><JsonLd graph={graph} /><BrandListingContent brandSlug={brand.slug} cars={cars} /></>;
 }

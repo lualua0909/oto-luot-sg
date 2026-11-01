@@ -6,20 +6,34 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { getBusinessProfile } from "@/lib/structured-data/business";
+import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
+
+const PAGE_DESCRIPTION = "Kinh nghiệm, thủ tục và mẹo kiểm tra xe ô tô cũ từ Ô TÔ LƯỚT SÀI GÒN.";
 import { imageSrc } from "@/lib/blob/image-url";
 
 export const metadata: Metadata = {
   title: "Kiến thức mua bán ô tô",
-  description: "Kinh nghiệm, thủ tục và mẹo kiểm tra xe ô tô cũ từ Ô TÔ LƯỚT SÀI GÒN.",
+  description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/tin-tuc") },
   openGraph: { url: absoluteUrl("/tin-tuc") },
 };
 
 export default async function NewsListPage() {
-  const posts = await getPublishedNews(60).catch(() => []);
+  const [posts, business] = await Promise.all([getPublishedNews(60).catch(() => []), getBusinessProfile()]);
+  const listName = "Chia sẻ kiến thức về xe";
 
   return (
     <div className="container-page py-10">
+      <JsonLd
+        graph={[
+          websiteNode(business),
+          businessRefNode(business),
+          webPageNode({ path: "/tin-tuc", type: "CollectionPage", name: listName, description: PAGE_DESCRIPTION, mainEntity: posts.length ? ids.itemList("/tin-tuc") : undefined }),
+          posts.length > 0 && itemListNode("/tin-tuc", listName, posts.map((post) => ({ name: post.title, path: `/tin-tuc/${post.slug}` }))),
+        ]}
+      />
       <SectionHeading
         as="h1"
         id="news.heading"
