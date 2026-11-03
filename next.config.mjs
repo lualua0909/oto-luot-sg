@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Serve image URLs directly instead of using Next.js/Vercel Image Optimization.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
