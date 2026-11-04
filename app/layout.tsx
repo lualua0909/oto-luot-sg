@@ -14,7 +14,6 @@ import { ContentProvider } from "@/components/shared/content-provider";
 import { AuthProvider } from "@/lib/firebase/auth-context";
 import { getCachedContentTexts } from "@/lib/structured-data/business";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteUrl } from "@/lib/seo";
 
 const display = Be_Vietnam_Pro({
@@ -110,7 +109,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </AuthProvider>
         <Toaster richColors position="top-center" />
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
