@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { BRANDS } from "@/lib/constants";
-import { subscribeToBrands } from "@/lib/firebase/brands";
+import { subscribeToBrands } from "@/lib/store/brands";
 import type { Brand } from "@/lib/types";
 
 const BrandsContext = createContext<Brand[]>(BRANDS);

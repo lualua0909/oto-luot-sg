@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPublishedCars } from "@/lib/firebase/cars";
+import { getPublishedCars } from "@/lib/data/cars";
 import { CarListing } from "@/components/car/car-listing";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { absoluteUrl } from "@/lib/seo";

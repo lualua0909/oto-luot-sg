@@ -5,10 +5,10 @@ import Image from "next/image";
 import { Loader2, Star, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { CarImage } from "@/lib/types";
-import { uploadImage } from "@/lib/blob/storage";
+import { uploadImage } from "@/lib/images/upload";
 import { cn } from "@/lib/utils";
 import { reportAdminError } from "@/lib/client/error-log";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 interface ImageUploaderProps {
   folder: "cars" | "news";
@@ -21,8 +21,8 @@ interface ImageUploaderProps {
 function uploadErrorMessage(error: unknown) {
   const message = (error as { message?: string }).message ?? "";
 
-  if (message.includes("BLOB_READ_WRITE_TOKEN")) {
-    return "Chưa cấu hình Vercel Blob. Vào Vercel → Storage → Blob để tạo store và thêm BLOB_READ_WRITE_TOKEN.";
+  if (message.includes("R2_")) {
+    return "Chưa cấu hình kho ảnh Cloudflare R2 (biến môi trường R2_*).";
   }
   if (message.toLowerCase().includes("content type")) {
     return "Định dạng ảnh không được hỗ trợ.";
@@ -32,7 +32,7 @@ function uploadErrorMessage(error: unknown) {
   }
   // Our own server messages are in Vietnamese — show them as-is.
   if (/[à-ỹđ]/i.test(message)) return message;
-  return message ? `Tải ảnh thất bại: ${message}` : "Tải ảnh thất bại. Hãy kiểm tra cấu hình Vercel Blob.";
+  return message ? `Tải ảnh thất bại: ${message}` : "Tải ảnh thất bại. Hãy kiểm tra cấu hình kho ảnh R2.";
 }
 
 export function ImageUploader({ folder, images, onChange, coverImage, onCoverChange }: ImageUploaderProps) {
@@ -73,7 +73,7 @@ export function ImageUploader({ folder, images, onChange, coverImage, onCoverCha
     if (coverImage === img.url && onCoverChange) onCoverChange(remaining[0]?.url ?? "");
 
     // Do not delete the blob here. The edit form may still be cancelled, in
-    // which case Firestore continues to reference this URL. Orphaned uploads
+    // which case the database continues to reference this URL. Orphaned uploads
     // can be reviewed and removed safely from the file manager after saving.
   }
 

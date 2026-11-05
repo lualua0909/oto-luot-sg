@@ -2,7 +2,7 @@
  * Business facts used by the JSON-LD structured data.
  *
  * Name, description, phone, email, address and social links are edited by
- * admins in /admin/cai-dat (Firestore `settings/showroom`) and read at request
+ * admins in /admin/cai-dat (D1 `settings` row `showroom`) and read at request
  * time — see getBusinessProfile() in ./business.ts. This file only holds the
  * facts that have no admin field yet.
  *

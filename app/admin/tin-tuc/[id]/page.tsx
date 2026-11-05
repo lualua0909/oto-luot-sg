@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { NewsForm } from "@/components/admin/news-form";
-import { getNewsByIdAdmin } from "@/lib/firebase/news";
+import { getNewsByIdAdmin } from "@/lib/store/news";
 import { NewsPost } from "@/lib/types";
 
 export default function EditNewsPage() {

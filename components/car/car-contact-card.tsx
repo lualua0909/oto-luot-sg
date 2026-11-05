@@ -9,7 +9,7 @@ import { getCarColorHex } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { submitLead } from "@/lib/firebase/leads";
+import { submitLead } from "@/lib/store/leads";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { formatPriceTrieu } from "@/lib/utils";
 import { Car } from "@/lib/types";

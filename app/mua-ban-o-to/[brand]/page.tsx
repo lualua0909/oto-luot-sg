@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCarsByBrand } from "@/lib/firebase/cars";
+import { getCarsByBrand } from "@/lib/data/cars";
 import { BrandListingContent } from "@/components/car/brand-listing-content";
 import { BRANDS } from "@/lib/constants";
 import { absoluteUrl } from "@/lib/seo";

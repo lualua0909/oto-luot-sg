@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { DEFAULT_SHOWROOM_SETTINGS, subscribeToShowroomSettings } from "@/lib/firebase/settings";
+import { DEFAULT_SHOWROOM_SETTINGS, subscribeToShowroomSettings } from "@/lib/store/settings";
 import type { ShowroomSettings } from "@/lib/types";
 
 const ShowroomSettingsContext = createContext<ShowroomSettings>(DEFAULT_SHOWROOM_SETTINGS);

@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2, ChevronRight, ClipboardCheck, HandCoins, Help
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/home/lead-form";
 import { LoanCalculator } from "@/components/finance/loan-calculator";
-import { getShowroomSettings } from "@/lib/firebase/settings";
+import { getShowroomSettings } from "@/lib/data/settings";
 import { SERVICE_PAGES, type ServiceSlug } from "@/lib/services";
 import { absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";

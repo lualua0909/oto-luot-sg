@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { DEFAULT_SHOWROOM_SETTINGS, getShowroomSettings, saveShowroomSettings } from "@/lib/firebase/settings";
+import { DEFAULT_SHOWROOM_SETTINGS, getShowroomSettings, saveShowroomSettings } from "@/lib/store/settings";
 import type { ShowroomSettings } from "@/lib/types";
 
 const FIELDS: Array<{

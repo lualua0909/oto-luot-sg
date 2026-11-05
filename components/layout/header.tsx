@@ -13,7 +13,7 @@ import { useShowroomSettings } from "@/components/shared/showroom-settings-provi
 import { useBrands } from "@/components/shared/brands-provider";
 import { T } from "@/components/shared/editable-text";
 
-/** "/mua-ban-o-to" → "nav.mua-ban-o-to" — slashes are not usable as Firestore map keys. */
+/** "/mua-ban-o-to" → "nav.mua-ban-o-to" — slashes are kept out of content text ids. */
 function navTextId(href: string) {
   return `nav${href.replace(/\//g, ".")}`;
 }

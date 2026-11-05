@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ArrowUpDown, Search, SlidersHorizontal, X } from "lucide-react";
 import { Car, CarFilters } from "@/lib/types";
-import { applyCarFilters } from "@/lib/firebase/cars";
+import { applyCarFilters } from "@/lib/store/cars";
 import { CarCard } from "@/components/car/car-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BODY_TYPES } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
 import { T } from "@/components/shared/editable-text";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 const SORTS: { label: string; compare?: (a: Car, b: Car) => number }[] = [
   { label: "Mới đăng trước" },

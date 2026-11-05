@@ -9,10 +9,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useBrands } from "@/components/shared/brands-provider";
-import { saveBrand } from "@/lib/firebase/brands";
-import { uploadImage } from "@/lib/blob/storage";
+import { saveBrand } from "@/lib/store/brands";
+import { uploadImage } from "@/lib/images/upload";
 import type { Brand } from "@/lib/types";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export default function AdminBrandsPage() {
   const brands = useBrands();
@@ -60,7 +60,7 @@ export default function AdminBrandsPage() {
       setEditing(null);
       setDraft(null);
     } catch {
-      toast.error("Không thể lưu. Hãy kiểm tra và publish Firestore Rules.");
+      toast.error("Không thể lưu. Hãy kiểm tra quyền quản trị và kết nối D1.");
     } finally {
       setSaving(false);
     }

@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Lead } from "@/lib/types";
-import { getAllLeadsAdmin, updateLeadStatus, deleteLead } from "@/lib/firebase/leads";
+import { getAllLeadsAdmin, updateLeadStatus, deleteLead } from "@/lib/store/leads";
 import { formatDate } from "@/lib/utils";
 
 const STATUS_OPTIONS: { value: Lead["status"]; label: string; variant: "secondary" | "accent" | "success" }[] = [

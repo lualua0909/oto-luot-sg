@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getNewsBySlug } from "@/lib/firebase/news";
+import { getNewsBySlug } from "@/lib/data/news";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
@@ -12,7 +12,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { blogPostingNode, breadcrumbNode, businessRefNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export async function generateMetadata({
   params,

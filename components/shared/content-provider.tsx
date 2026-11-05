@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { subscribeToContentTexts, type ContentTexts } from "@/lib/firebase/content";
+import { subscribeToContentTexts, type ContentTexts } from "@/lib/store/content";
 
 const ContentContext = createContext<ContentTexts>({});
 

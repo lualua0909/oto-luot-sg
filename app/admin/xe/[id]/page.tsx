@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { CarForm } from "@/components/admin/car-form";
-import { getCarById } from "@/lib/firebase/cars";
+import { getCarById } from "@/lib/store/cars";
 import { Car } from "@/lib/types";
 
 export default function EditCarPage() {

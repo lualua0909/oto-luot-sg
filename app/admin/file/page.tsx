@@ -1,5 +1,5 @@
-import { BlobsManager } from "@/components/admin/blobs-manager";
+import { FilesManager } from "@/components/admin/files-manager";
 
 export default function AdminFilesPage() {
-  return <BlobsManager />;
+  return <FilesManager />;
 }

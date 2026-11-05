@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ElementType, type MouseEvent } from "
 import { toast } from "sonner";
 import { useAuth } from "@/lib/firebase/auth-context";
 import { useText } from "@/components/shared/content-provider";
-import { saveContentText } from "@/lib/firebase/content";
+import { saveContentText } from "@/lib/store/content";
 
 interface TProps {
   /** Stable key in the content document, e.g. "home.hero.title". */
@@ -17,7 +17,7 @@ interface TProps {
 
 /**
  * Renders a piece of site copy. Admins (role 0/1) can right-click it to edit
- * inline; saving writes the new text to the `content/site` Firestore document.
+ * inline; saving writes the new text to the `content` row `site` in D1.
  */
 export function T({ id, children, as: Tag = "span", className }: TProps) {
   const value = useText(id, children);

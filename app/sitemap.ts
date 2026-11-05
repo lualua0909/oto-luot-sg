@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { BRANDS } from "@/lib/constants";
-import { getPublishedCars } from "@/lib/firebase/cars";
-import { getPublishedNews } from "@/lib/firebase/news";
+import { getPublishedCars } from "@/lib/data/cars";
+import { getPublishedNews } from "@/lib/data/news";
 import { getSiteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

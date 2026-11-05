@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { NewsPost, CarImage } from "@/lib/types";
-import { NewsInput, createNews, updateNews } from "@/lib/firebase/news";
+import { NewsInput, createNews, updateNews } from "@/lib/store/news";
 import { reportAdminError } from "@/lib/client/error-log";
 
 export function NewsForm({ post }: { post?: NewsPost }) {

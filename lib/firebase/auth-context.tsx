@@ -15,7 +15,7 @@ import {
   type User,
 } from "firebase/auth";
 import { firebaseApp } from "./client";
-import { ensureUserProfile, isAdminRole } from "./users";
+import { ensureUserProfile, isAdminRole } from "@/lib/store/users";
 import type { AppUser } from "../types";
 
 interface AuthContextValue {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           setProfile(await ensureUserProfile(u));
         } catch {
-          // Firestore unreachable or rules deny → treat as the lowest role.
+          // D1 unreachable or token rejected → treat as the lowest role.
           setProfile(null);
         }
       }

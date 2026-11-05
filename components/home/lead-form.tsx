@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { LEAD_TOPICS } from "@/lib/constants";
-import { submitLead } from "@/lib/firebase/leads";
+import { submitLead } from "@/lib/store/leads";
 import { Headset, Loader2, Phone } from "lucide-react";
 import { T } from "@/components/shared/editable-text";
 import Link from "next/link";

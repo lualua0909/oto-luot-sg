@@ -4,7 +4,7 @@ import { ArrowRight, BookOpen, CalendarDays } from "lucide-react";
 import { NewsPost } from "@/lib/types";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export function NewsSection({ posts }: { posts: NewsPost[] }) {
   if (posts.length === 0) return null;

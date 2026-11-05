@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireFirebaseUser, UploadAuthError } from "@/lib/blob/admin-auth";
+import { AuthError, verifyIdToken } from "@/lib/server/auth";
 import { writeErrorLog } from "@/lib/server/error-log";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const authorization = request.headers.get("authorization");
     const idToken = authorization?.startsWith("Bearer ") ? authorization.slice(7) : null;
-    const uid = await requireFirebaseUser(idToken);
+    const { uid } = await verifyIdToken(idToken);
 
     const now = Date.now();
     const userReports = (recentReports.get(uid) ?? []).filter((timestamp) => now - timestamp < REPORT_WINDOW_MS);
@@ -53,7 +53,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     console.error("Could not accept admin error report", error);
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: error instanceof UploadAuthError ? 403 : 400 },
+      { status: error instanceof AuthError ? 403 : 400 },
     );
   }
 }

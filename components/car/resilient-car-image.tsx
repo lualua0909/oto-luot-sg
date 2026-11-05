@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
-import { imageSrc, isProxiedImage } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 type ResilientCarImageProps = Omit<ImageProps, "src" | "onError"> & {
   sources: Array<string | null | undefined>;
@@ -11,9 +11,9 @@ type ResilientCarImageProps = Omit<ImageProps, "src" | "onError"> & {
 };
 
 /**
- * Car photos live in Vercel Blob and have already been compressed on upload.
- * They load through /api/img (browser-cached only) instead of the Next image
- * optimizer, so the server/CDN never keeps or pre-fetches copies. If a saved URL was deleted, try the car's other photos before showing a
+ * Car photos live in Cloudflare R2, already compressed on upload, and load straight
+ * from the public R2 URL (never through a Next.js route or the image optimizer).
+ * If a saved URL was deleted, try the car's other photos before showing a
  * clean fallback instead of the browser's broken-image icon.
  */
 export function ResilientCarImage({
@@ -43,7 +43,7 @@ export function ResilientCarImage({
       {...props}
       key={src}
       src={src}
-      unoptimized={unoptimized ?? isProxiedImage(src)}
+      unoptimized={unoptimized ?? true}
       onError={() => {
         if (index + 1 < candidates.length) {
           setIndex(index + 1);

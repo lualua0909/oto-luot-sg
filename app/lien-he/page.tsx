@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { LeadForm } from "@/components/home/lead-form";
-import { getShowroomSettings } from "@/lib/firebase/settings";
+import { getShowroomSettings } from "@/lib/data/settings";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";

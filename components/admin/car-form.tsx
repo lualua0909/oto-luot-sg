@@ -14,8 +14,8 @@ import { BODY_TYPES, BRANDS, CAR_COLORS } from "@/lib/constants";
 import { useBrands } from "@/components/shared/brands-provider";
 import { useShowroomSettings } from "@/components/shared/showroom-settings-provider";
 import { Car, CarImage } from "@/lib/types";
-import { CarInput, createCar, updateCar } from "@/lib/firebase/cars";
-import { deleteImage } from "@/lib/blob/storage";
+import { CarInput, createCar, updateCar } from "@/lib/store/cars";
+import { deleteImage } from "@/lib/images/upload";
 import { reportAdminError } from "@/lib/client/error-log";
 
 export function CarForm({ car }: { car?: Car }) {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getPublishedNews } from "@/lib/firebase/news";
+import { getPublishedNews } from "@/lib/data/news";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
@@ -11,7 +11,7 @@ import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
 
 const PAGE_DESCRIPTION = "Kinh nghiệm, thủ tục và mẹo kiểm tra xe ô tô cũ từ Ô TÔ LƯỚT SÀI GÒN.";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export const metadata: Metadata = {
   title: "Kiến thức mua bán ô tô",

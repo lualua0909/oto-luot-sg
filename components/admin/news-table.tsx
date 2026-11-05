@@ -11,9 +11,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { NewsPost } from "@/lib/types";
-import { getAllNewsAdmin, deleteNews } from "@/lib/firebase/news";
+import { getAllNewsAdmin, deleteNews } from "@/lib/store/news";
 import { formatDate } from "@/lib/utils";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export function NewsTable() {
   const [posts, setPosts] = useState<NewsPost[]>([]);

@@ -1,13 +1,13 @@
 import { cache } from "react";
-import { getShowroomSettings } from "@/lib/firebase/settings";
-import { getContentTexts } from "@/lib/firebase/content";
+import { getShowroomSettings } from "@/lib/data/settings";
+import { getContentTexts } from "@/lib/data/content";
 import { SITE } from "@/lib/constants";
 import type { ShowroomSettings } from "@/lib/types";
 import { BUSINESS_CONFIG } from "./config";
 
 export type OpeningHours = (typeof BUSINESS_CONFIG.BUSINESS_OPENING_HOURS.specification)[number];
 
-/** Verified business facts for the schema, merged from Firestore settings + config. */
+/** Verified business facts for the schema, merged from D1 settings + config. */
 export interface BusinessProfile {
   name: string;
   description: string;
@@ -20,7 +20,7 @@ export interface BusinessProfile {
   openingHours: OpeningHours[] | null;
 }
 
-// One Firestore read per request, shared by every caller in the same render.
+// One D1 read per request, shared by every caller in the same render.
 export const getCachedShowroomSettings = cache(async (): Promise<ShowroomSettings | null> =>
   getShowroomSettings().catch(() => null)
 );

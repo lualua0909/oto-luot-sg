@@ -15,10 +15,10 @@ import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Car } from "@/lib/types";
-import { getAllCarsAdmin, deleteCar } from "@/lib/firebase/cars";
+import { getAllCarsAdmin, deleteCar } from "@/lib/store/cars";
 import { formatPriceTrieu } from "@/lib/utils";
-import { deleteImage } from "@/lib/blob/storage";
-import { imageSrc } from "@/lib/blob/image-url";
+import { deleteImage } from "@/lib/images/upload";
+import { imageSrc } from "@/lib/images/url";
 
 const STATUS_LABEL: Record<Car["status"], { label: string; variant: "success" | "secondary" | "outline" }> = {
   "dang-ban": { label: "Đang bán", variant: "success" },

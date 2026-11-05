@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck, CheckCircle2, Clock3, MapPin, ShieldCheck } from "lucide-react";
-import { getCarBySlug, getRelatedCars } from "@/lib/firebase/cars";
+import { getCarBySlug, getRelatedCars } from "@/lib/data/cars";
 import { CarGallery } from "@/components/car/car-gallery";
 import { CarSpecs } from "@/components/car/car-specs";
 import { CarContactCard } from "@/components/car/car-contact-card";

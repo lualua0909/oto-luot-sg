@@ -5,7 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { useBrands } from "@/components/shared/brands-provider";
 import { T } from "@/components/shared/editable-text";
-import { imageSrc } from "@/lib/blob/image-url";
+import { imageSrc } from "@/lib/images/url";
 
 export function BrandGrid() {
   const brands = useBrands();

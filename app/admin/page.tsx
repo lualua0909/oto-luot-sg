@@ -6,9 +6,9 @@ import { Car, Newspaper, MessageSquare, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAllCarsAdmin } from "@/lib/firebase/cars";
-import { getAllNewsAdmin } from "@/lib/firebase/news";
-import { getAllLeadsAdmin } from "@/lib/firebase/leads";
+import { getAllCarsAdmin } from "@/lib/store/cars";
+import { getAllNewsAdmin } from "@/lib/store/news";
+import { getAllLeadsAdmin } from "@/lib/store/leads";
 import { AnalyticsPanel } from "@/components/admin/analytics-panel";
 
 export default function AdminDashboardPage() {

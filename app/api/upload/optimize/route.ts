@@ -1,77 +1,40 @@
-import { del, head, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import { requireUploadAdmin, UploadAuthError } from "@/lib/blob/admin-auth";
-import { CAR_IMAGE_MAX_BYTES, CAR_IMAGE_MAX_DIMENSION, compressCarImage } from "@/lib/blob/server-webp";
+import { AuthError, bearer, requireAdmin } from "@/lib/server/auth";
+import { CAR_IMAGE_MAX_BYTES, CAR_IMAGE_MAX_DIMENSION, compressCarImage } from "@/lib/server/image-compress";
+import { deleteObject, headObject, publicUrl, putObject, readObject } from "@/lib/server/r2";
 import { writeErrorLog } from "@/lib/server/error-log";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+/** Admin only: compress an uploaded car photo (R2 staging/cars/...) into cars/<name>.webp. */
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const authorization = request.headers.get("authorization");
-    const idToken = authorization?.startsWith("Bearer ") ? authorization.slice(7) : null;
-    await requireUploadAdmin(idToken);
-
-    const body = (await request.json()) as { pathname?: unknown };
-    const pathname = body.pathname;
+    await requireAdmin(bearer(request));
+    const { pathname } = (await request.json()) as { pathname?: unknown };
     if (typeof pathname !== "string" || !/^staging\/cars\/[a-zA-Z0-9._-]+$/.test(pathname)) {
       return NextResponse.json({ error: "Đường dẫn ảnh xe không hợp lệ." }, { status: 400 });
     }
+    const original = await headObject(pathname);
+    if (!original || (original.ContentLength ?? 0) > 20 * 1024 * 1024) throw new Error("Không tìm thấy ảnh xe vừa tải lên.");
 
-    const original = await head(pathname);
-    if (original.pathname !== pathname || !original.url || !original.etag || original.size > 20 * 1024 * 1024) {
-      return NextResponse.json({ error: "Không thể xác nhận ảnh xe trên Blob." }, { status: 400 });
-    }
-
-    const response = await fetch(original.url, { cache: "no-store" });
-    if (!response.ok) throw new Error("Không thể tải ảnh xe từ Blob để nén.");
-    const input = Buffer.from(await response.arrayBuffer());
-    if (input.length !== original.size) throw new Error("Dung lượng ảnh xe trên Blob không khớp.");
-
-    const compressed = await compressCarImage(input);
-    if (
-      compressed.data.length > CAR_IMAGE_MAX_BYTES ||
-      Math.max(compressed.width, compressed.height) > CAR_IMAGE_MAX_DIMENSION
-    ) {
+    const compressed = await compressCarImage(await readObject(pathname));
+    if (compressed.data.length > CAR_IMAGE_MAX_BYTES || Math.max(compressed.width, compressed.height) > CAR_IMAGE_MAX_DIMENSION) {
       throw new Error("Ảnh xe sau nén không đạt chuẩn.");
     }
-
-    const filename = pathname.slice("staging/cars/".length).replace(/\.[^.]+$/, "");
-    const finalPathname = `cars/${filename}.webp`;
-    const uploaded = await put(finalPathname, compressed.data, {
-      access: "public",
-      contentType: "image/webp",
-      addRandomSuffix: false,
-    });
-    const finalMetadata = await head(uploaded.url);
-    if (
-      uploaded.pathname !== finalPathname ||
-      finalMetadata.size !== compressed.data.length ||
-      finalMetadata.contentType !== "image/webp"
-    ) {
-      throw new Error("Ảnh xe đã lưu trên Blob không đạt chuẩn.");
-    }
-
-    try {
-      await del(original.url);
-    } catch (cleanupError) {
-      await writeErrorLog("api.upload.optimize.cleanup-staging", cleanupError);
-    }
+    const finalKey = `cars/${pathname.slice("staging/cars/".length).replace(/\.[^.]+$/, "")}.webp`;
+    await putObject(finalKey, compressed.data, "image/webp");
+    await deleteObject(pathname).catch((e) => writeErrorLog("api.upload.optimize.cleanup-staging", e));
 
     return NextResponse.json({
-      url: uploaded.url,
-      pathname: finalPathname,
+      url: publicUrl(finalKey),
+      pathname: finalKey,
       size: compressed.data.length,
       width: compressed.width,
       height: compressed.height,
     });
   } catch (error) {
     await writeErrorLog("api.upload.optimize", error);
-    const message = error instanceof Error ? error.message : "Không thể nén ảnh xe.";
-    return NextResponse.json(
-      { error: message },
-      { status: error instanceof UploadAuthError ? 403 : 400 }
-    );
+    return NextResponse.json({ error: (error as Error).message || "Không thể nén ảnh xe." }, { status: error instanceof AuthError ? 403 : 400 });
   }
 }

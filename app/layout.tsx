@@ -30,7 +30,7 @@ const body = Inter({
   display: "swap",
 });
 
-// Never cache CMS/Firestore data: every request queries directly.
+// Never cache CMS data: every request queries D1 directly.
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
