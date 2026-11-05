@@ -1,4 +1,5 @@
 import { adminSaveContentText, getContentTextsAction } from "@/lib/actions";
+import { unwrap } from "@/lib/action-result";
 import type { ContentTexts } from "@/lib/content-texts";
 import { idToken, liveValue } from "./session";
 export { CONTENT_DOC_ID, type ContentTexts } from "@/lib/content-texts";
@@ -11,6 +12,6 @@ export function subscribeToContentTexts(callback: (texts: ContentTexts) => void)
 }
 
 export async function saveContentText(id: string, value: string): Promise<void> {
-  await adminSaveContentText(await idToken(), id, value);
+  await unwrap(adminSaveContentText(await idToken(), id, value));
   await live.notify();
 }

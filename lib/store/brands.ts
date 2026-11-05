@@ -1,4 +1,5 @@
 import { adminSaveBrand, getBrandsAction } from "@/lib/actions";
+import { unwrap } from "@/lib/action-result";
 import { BRANDS } from "@/lib/constants";
 import type { Brand } from "@/lib/types";
 import { idToken, liveValue } from "./session";
@@ -11,6 +12,6 @@ export function subscribeToBrands(callback: (brands: Brand[]) => void) {
 }
 
 export async function saveBrand(brand: Brand): Promise<void> {
-  await adminSaveBrand(await idToken(), brand);
+  await unwrap(adminSaveBrand(await idToken(), brand));
   await live.notify();
 }

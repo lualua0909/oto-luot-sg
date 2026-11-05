@@ -1,4 +1,5 @@
 import { adminSaveShowroomSettings, getShowroomSettingsAction } from "@/lib/actions";
+import { unwrap } from "@/lib/action-result";
 import type { ShowroomSettings } from "@/lib/types";
 import { idToken, liveValue } from "./session";
 export { DEFAULT_SHOWROOM_SETTINGS, SHOWROOM_SETTINGS_ID } from "@/lib/showroom-settings";
@@ -12,6 +13,6 @@ export function subscribeToShowroomSettings(callback: (settings: ShowroomSetting
 }
 
 export async function saveShowroomSettings(settings: ShowroomSettings): Promise<void> {
-  await adminSaveShowroomSettings(await idToken(), settings);
+  await unwrap(adminSaveShowroomSettings(await idToken(), settings));
   await live.notify();
 }
