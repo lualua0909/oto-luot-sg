@@ -83,14 +83,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="vi" className={`${display.variable} ${body.variable}`}>
-      <head
-        dangerouslySetInnerHTML={{
-          __html: `<!-- Author: NAD -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700&display=swap">`,
-        }}
-      />
+      {/* Keep <head> as plain JSX: dangerouslySetInnerHTML here lets React wipe
+          Next's CSS <link> tags on re-render, leaving pages unstyled. */}
+      <head>
+        {/* React can't emit a bare HTML comment, so it goes inside <noscript> as raw HTML. */}
+        <noscript dangerouslySetInnerHTML={{ __html: "<!-- Author: NAD -->" }} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700&display=swap"
+        />
+      </head>
       <body className="flex min-h-screen flex-col font-sans">
         <AuthProvider>
           <ContentProvider initialTexts={contentTexts}>
