@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { getShowroomSettings } from "@/lib/data/settings";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
@@ -17,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Giới thiệu",
     description: aboutDescription(site.fullName),
     alternates: { canonical: absoluteUrl("/gioi-thieu") },
-    openGraph: { url: absoluteUrl("/gioi-thieu") },
+    ...socialMetadata("Giới thiệu", aboutDescription(site.fullName), "/gioi-thieu"),
   };
 }
 

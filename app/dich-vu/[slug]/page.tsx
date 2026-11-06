@@ -8,6 +8,7 @@ import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { getShowroomSettings } from "@/lib/data/settings";
 import { SERVICE_PAGES, type ServiceSlug } from "@/lib/services";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { breadcrumbNode, businessRefNode, serviceNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -26,7 +27,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
     title: service.title,
     description: service.description,
     alternates: { canonical: url },
-    openGraph: { title: service.title, description: service.description, url },
+    ...socialMetadata(service.title, service.description, `/dich-vu/${params.slug}`),
   };
 }
 

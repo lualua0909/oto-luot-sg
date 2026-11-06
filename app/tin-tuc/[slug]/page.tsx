@@ -9,6 +9,7 @@ import { Phone } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { blogPostingNode, breadcrumbNode, businessRefNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -26,7 +27,7 @@ export async function generateMetadata({
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: url },
-    openGraph: { type: "article", url, images: post.coverImage ? [post.coverImage] : [] },
+    ...socialMetadata(post.title, post.excerpt, `/tin-tuc/${post.slug}`, "article"),
     // Unpublished drafts stay reachable for preview but must not be indexed.
     ...(post.isPublished ? {} : { robots: { index: false, follow: false } }),
   };

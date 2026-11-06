@@ -11,6 +11,7 @@ import { getFeaturedCars } from "@/lib/data/cars";
 import { getPublishedNews } from "@/lib/data/news";
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/") },
-  openGraph: { url: absoluteUrl("/") },
+  ...socialMetadata(PAGE_TITLE, PAGE_DESCRIPTION, "/"),
 };
 
 export default async function HomePage() {

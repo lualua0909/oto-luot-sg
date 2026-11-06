@@ -4,6 +4,7 @@ import { getCarsByBrand } from "@/lib/data/cars";
 import { BrandListingContent } from "@/components/car/brand-listing-content";
 import { BRANDS } from "@/lib/constants";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { breadcrumbNode, businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -24,7 +25,7 @@ export async function generateMetadata({
     title: `Xe ${brand.name} cũ tại TPHCM - Xe đang bán`,
     description: brandDescription(brand.name),
     alternates: { canonical: url },
-    openGraph: { url },
+    ...socialMetadata(`Xe ${brand.name} cũ tại TPHCM - Xe đang bán`, brandDescription(brand.name), `/mua-ban-o-to/${brand.slug}`),
     robots: cars.length > 0 ? { index: true, follow: true } : { index: false, follow: true },
   };
 }

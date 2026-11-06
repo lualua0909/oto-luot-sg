@@ -3,6 +3,7 @@ import { getPublishedCars } from "@/lib/data/cars";
 import { CarListing } from "@/components/car/car-listing";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   title: "Mua bán xe ô tô cũ TPHCM - Xe đang có",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/mua-ban-o-to") },
-  openGraph: { url: absoluteUrl("/mua-ban-o-to") },
+  ...socialMetadata("Mua bán xe ô tô cũ TPHCM - Xe đang có", PAGE_DESCRIPTION, "/mua-ban-o-to"),
 };
 
 export default async function CarListingPage() {

@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { formatDate } from "@/lib/utils";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   title: "Kiến thức mua bán ô tô",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/tin-tuc") },
-  openGraph: { url: absoluteUrl("/tin-tuc") },
+  ...socialMetadata("Kiến thức mua bán ô tô", PAGE_DESCRIPTION, "/tin-tuc"),
 };
 
 export default async function NewsListPage() {

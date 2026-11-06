@@ -15,6 +15,7 @@ import { AuthProvider } from "@/lib/firebase/auth-context";
 import { getCachedContentTexts } from "@/lib/structured-data/business";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 
 const display = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -54,19 +55,7 @@ export const metadata: Metadata = {
     "ô tô cũ trả góp",
   ],
   authors: [{ name: SITE.fullName }],
-  openGraph: {
-    type: "website",
-    locale: "vi_VN",
-    url: getSiteUrl(),
-    siteName: SITE.name,
-    title: `${SITE.name} | ${SITE.slogan}`,
-    description: SITE.description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${SITE.name} | ${SITE.slogan}`,
-    description: SITE.description,
-  },
+  ...socialMetadata(`${SITE.name} | ${SITE.slogan}`, SITE.description, "/"),
   robots: { index: true, follow: true },
   verification: {
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),

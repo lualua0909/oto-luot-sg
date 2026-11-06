@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { T } from "@/components/shared/editable-text";
 import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessRefNode, itemListNode, webPageNode, websiteNode, ids } from "@/lib/structured-data/schema";
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   title: "Dịch vụ thu xe",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: absoluteUrl("/dich-vu") },
-  openGraph: { url: absoluteUrl("/dich-vu") },
+  ...socialMetadata("Dịch vụ thu xe", PAGE_DESCRIPTION, "/dich-vu"),
 };
 
 const SERVICES = [

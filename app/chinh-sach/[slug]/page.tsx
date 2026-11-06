@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl, compactDescription } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessRefNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
@@ -46,7 +47,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const p = POLICIES[params.slug];
   const url = absoluteUrl(`/chinh-sach/${params.slug}`);
   // Own description per policy page instead of inheriting the home page one.
-  return p ? { title: p.title, description: compactDescription(p.content[0]), alternates: { canonical: url }, openGraph: { url } } : {};
+  return p ? {
+    title: p.title,
+    description: compactDescription(p.content[0]),
+    alternates: { canonical: url },
+    ...socialMetadata(p.title, compactDescription(p.content[0]), `/chinh-sach/${params.slug}`),
+  } : {};
 }
 
 export default async function PolicyPage({ params }: { params: { slug: string } }) {

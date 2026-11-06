@@ -14,6 +14,7 @@ import { T } from "@/components/shared/editable-text";
 import { CarInspectionCard } from "@/components/car/car-inspection-card";
 import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { absoluteUrl, cleanSeoText, compactDescription } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { TrackRecentlyViewed } from "@/components/car/recently-viewed";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
@@ -29,11 +30,12 @@ export async function generateMetadata({
   const url = absoluteUrl(`/xe/${car.slug}`);
   const structuredName = [car.brandName, car.model, car.year].filter(Boolean).join(" ");
   const seoTitle = `${structuredName || cleanSeoText(car.title)} cũ - ${formatPriceTrieu(car.priceTrieu)} tại TP.HCM`;
+  const description = compactDescription(`${structuredName || car.title}, giá ${formatPriceTrieu(car.priceTrieu)}, ODO ${car.odoKm?.toLocaleString("vi-VN") || "đang cập nhật"} km. ${car.description}`);
   return {
     title: seoTitle,
-    description: compactDescription(`${structuredName || car.title}, giá ${formatPriceTrieu(car.priceTrieu)}, ODO ${car.odoKm?.toLocaleString("vi-VN") || "đang cập nhật"} km. ${car.description}`),
+    description,
     alternates: { canonical: url },
-    openGraph: { title: seoTitle, url, images: car.coverImage ? [car.coverImage] : [] },
+    ...socialMetadata(seoTitle, description, `/xe/${car.slug}`),
   };
 }
 

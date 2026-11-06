@@ -5,6 +5,7 @@ import { LeadForm } from "@/components/home/lead-form";
 import { getShowroomSettings } from "@/lib/data/settings";
 import { T } from "@/components/shared/editable-text";
 import { absoluteUrl } from "@/lib/seo";
+import { socialMetadata } from "@/lib/social-metadata";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getBusinessProfile } from "@/lib/structured-data/business";
 import { businessNode, webPageNode, websiteNode } from "@/lib/structured-data/schema";
@@ -17,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Liên hệ",
     description: contactDescription(site.fullName, site.phoneDisplay, site.address),
     alternates: { canonical: absoluteUrl("/lien-he") },
-    openGraph: { url: absoluteUrl("/lien-he") },
+    ...socialMetadata("Liên hệ", contactDescription(site.fullName, site.phoneDisplay, site.address), "/lien-he"),
   };
 }
 

@@ -5,6 +5,11 @@ if (!R2_PUBLIC_URL && process.env.VERCEL) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return R2_PUBLIC_URL ? [
+      { source: "/opengraph-image", destination: `${R2_PUBLIC_URL}/branding/social-preview.jpg`, permanent: true },
+    ] : [];
+  },
   images: {
     // Images load straight from the public R2 domain; no Next.js/Vercel optimizer.
     unoptimized: true,
