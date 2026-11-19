@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     await requireAdmin(bearer(request));
     const { url } = (await request.json()) as { url?: unknown };
     const key = typeof url === "string" ? keyOf(url) : null;
-    if (!key || !/^(cars|news|brands|staging\/cars)\/[a-zA-Z0-9._-]+$/.test(key)) {
+    if (!key || !/^(cars|news|brands|banners|staging\/cars)\/[a-zA-Z0-9._-]+$/.test(key)) {
       return NextResponse.json({ error: "URL ảnh không hợp lệ." }, { status: 400 });
     }
     await deleteObject(key);

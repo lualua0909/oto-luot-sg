@@ -2,6 +2,9 @@ import type { CarImage } from "@/lib/types";
 import { idToken } from "@/lib/store/session";
 import { toWebp } from "./webp";
 
+/** Full-width hero banners get a bigger budget than the 80 KB of other images. */
+const BANNER_MAX_BYTES = 300 * 1024;
+
 /**
  * Uploads go straight from the browser to Cloudflare R2 through a presigned PUT URL
  * (no request-size limit from Vercel). Car photos are then compressed on the server
@@ -36,11 +39,11 @@ async function api<T>(path: string, body: unknown): Promise<T> {
 /** Upload one image under `folder/`; returns its public R2 URL and key (kept for deleting). */
 export async function uploadImage(
   file: File,
-  folder: "cars" | "news" | "brands",
+  folder: "cars" | "news" | "brands" | "banners",
   onProgress?: (pct: number) => void,
 ): Promise<CarImage> {
   const isCar = folder === "cars";
-  const upload = isCar ? file : await toWebp(file);
+  const upload = isCar ? file : await toWebp(file, folder === "banners" ? BANNER_MAX_BYTES : undefined);
   const contentType = upload.type || "application/octet-stream";
   const target = await api<{ uploadUrl: string; key: string; url: string }>("/api/upload", {
     folder,

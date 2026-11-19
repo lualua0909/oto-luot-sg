@@ -12,6 +12,7 @@ import {
   Settings,
   Tags,
   Images,
+  GalleryHorizontalEnd,
   LogOut,
   Menu,
   ExternalLink,
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/admin/tin-tuc", label: "Bài viết", icon: Newspaper },
   { href: "/admin/lien-he", label: "Yêu cầu tư vấn", icon: MessageSquare },
   { href: "/admin/cai-dat", label: "Cài đặt showroom", icon: Settings },
+  { href: "/admin/banner", label: "Banner trang chủ", icon: GalleryHorizontalEnd },
   { href: "/admin/thuong-hieu", label: "Hãng xe & logo", icon: Tags },
   { href: "/admin/file", label: "Quản lý file", icon: Images },
 ];

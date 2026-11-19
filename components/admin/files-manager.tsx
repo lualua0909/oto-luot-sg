@@ -17,6 +17,8 @@ import { Brand, Car, NewsPost } from "@/lib/types";
 import { getAllCarsAdmin, updateCar } from "@/lib/store/cars";
 import { getAllNewsAdmin, updateNews } from "@/lib/store/news";
 import { saveBrand, subscribeToBrands } from "@/lib/store/brands";
+import { getBanners, saveBanners } from "@/lib/store/banners";
+import type { BannerSlide } from "@/lib/banners";
 import { deleteImage, uploadImage } from "@/lib/images/upload";
 import { imageSrc } from "@/lib/images/url";
 import { idToken } from "@/lib/store/session";
@@ -51,6 +53,7 @@ export function FilesManager() {
   const [cars, setCars] = useState<Car[]>([]);
   const [news, setNews] = useState<NewsPost[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [banners, setBanners] = useState<BannerSlide[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>("all");
   const [toDelete, setToDelete] = useState<FileItem[] | null>(null);
@@ -63,17 +66,19 @@ export function FilesManager() {
   async function load() {
     setLoading(true);
     try {
-      const [res, c, n, b] = await Promise.all([
+      const [res, c, n, b, bn] = await Promise.all([
         idToken().then((t) => fetch("/api/images", { cache: "no-store", headers: { Authorization: `Bearer ${t}` } })).then((r) => r.json()),
         getAllCarsAdmin(),
         getAllNewsAdmin(),
         getBrandsOnce(),
+        getBanners(),
       ]);
       if (res.error) throw new Error(res.error);
       setItems((res.files as FileItem[]).sort((x, y) => y.uploadedAt.localeCompare(x.uploadedAt)));
       setCars(c);
       setNews(n);
       setBrands(b);
+      setBanners(bn);
     } catch {
       toast.error("Không tải được danh sách file.");
     } finally {
@@ -100,8 +105,9 @@ export function FilesManager() {
     });
     news.forEach((post) => add(post.coverImage, `Bài viết: ${post.title}`));
     brands.forEach((brand) => add(brand.logoUrl, `Logo: ${brand.name}`));
+    banners.forEach((slide, i) => add(slide.url, `Banner trang chủ #${i + 1}`));
     return map;
-  }, [cars, news, brands]);
+  }, [cars, news, brands, banners]);
 
   const visible = items.filter((b) => {
     if (filter === "used") return usage.has(b.url);
@@ -169,7 +175,7 @@ export function FilesManager() {
     setBusyUrl(old.url);
     try {
       const prefix = old.pathname.split("/")[0];
-      const folder = prefix === "news" || prefix === "brands" ? prefix : "cars";
+      const folder = prefix === "news" || prefix === "brands" || prefix === "banners" ? prefix : "cars";
       const next = await uploadImage(file, folder);
 
       await Promise.all([
@@ -187,6 +193,9 @@ export function FilesManager() {
         ...brands
           .filter((brand) => brand.logoUrl === old.url)
           .map((brand) => saveBrand({ ...brand, logoUrl: next.url })),
+        ...(banners.some((slide) => slide.url === old.url)
+          ? [saveBanners(banners.map((slide) => (slide.url === old.url ? { ...slide, url: next.url } : slide)))]
+          : []),
       ]);
 
       await deleteImage(old.url).catch(() => {

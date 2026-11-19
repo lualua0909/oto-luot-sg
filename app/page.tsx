@@ -9,6 +9,7 @@ import { RecentlyViewedSection } from "@/components/car/recently-viewed";
 import { LoanCalculator } from "@/components/finance/loan-calculator";
 import { getFeaturedCars } from "@/lib/data/cars";
 import { getPublishedNews } from "@/lib/data/news";
+import { getBanners } from "@/lib/data/banners";
 import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { socialMetadata } from "@/lib/social-metadata";
@@ -27,10 +28,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [cars, news, business] = await Promise.all([
+  const [cars, news, business, banners] = await Promise.all([
     getFeaturedCars(12).catch(() => []),
     getPublishedNews(4).catch(() => []),
     getBusinessProfile(),
+    getBanners(),
   ]);
 
   return (
@@ -42,7 +44,7 @@ export default async function HomePage() {
           webPageNode({ path: "/", name: PAGE_TITLE, description: PAGE_DESCRIPTION }),
         ]}
       />
-      <Hero />
+      <Hero slides={banners} />
       <BrandGrid />
       <RecentlyViewedSection />
       <CarGridSection cars={cars} />

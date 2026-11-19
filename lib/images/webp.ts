@@ -43,14 +43,14 @@ function encodeWebp(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
 }
 
 /** Find the highest WebP quality that stays within the size target. */
-async function encodeWithinTarget(canvas: HTMLCanvasElement): Promise<EncodedImage> {
+async function encodeWithinTarget(canvas: HTMLCanvasElement, target: number): Promise<EncodedImage> {
   const highestQuality = await encodeWebp(canvas, MAX_QUALITY);
-  if (highestQuality.size <= TARGET_SIZE_BYTES) {
+  if (highestQuality.size <= target) {
     return { blob: highestQuality, fitsTarget: true };
   }
 
   const lowestQuality = await encodeWebp(canvas, MIN_QUALITY);
-  if (lowestQuality.size > TARGET_SIZE_BYTES) {
+  if (lowestQuality.size > target) {
     return { blob: lowestQuality, fitsTarget: false };
   }
 
@@ -61,7 +61,7 @@ async function encodeWithinTarget(canvas: HTMLCanvasElement): Promise<EncodedIma
   for (let i = 0; i < QUALITY_SEARCH_STEPS; i++) {
     const quality = (low + high) / 2;
     const candidate = await encodeWebp(canvas, quality);
-    if (candidate.size <= TARGET_SIZE_BYTES) {
+    if (candidate.size <= target) {
       best = candidate;
       low = quality;
     } else {
@@ -99,7 +99,7 @@ function drawBitmap(
  * than the reference photo to meet the same file size.
  * Animated GIFs are kept untouched so their animation is not lost.
  */
-export async function toWebp(file: File): Promise<File> {
+export async function toWebp(file: File, targetBytes = TARGET_SIZE_BYTES): Promise<File> {
   if (file.type === "image/gif" || !file.type.startsWith("image/")) {
     return file;
   }
@@ -110,7 +110,7 @@ export async function toWebp(file: File): Promise<File> {
     const originalLongEdge = Math.max(bitmap.width, bitmap.height);
     if (
       file.type === "image/webp" &&
-      file.size <= TARGET_SIZE_BYTES &&
+      file.size <= targetBytes &&
       originalLongEdge <= MAX_DIMENSION
     ) {
       return file;
@@ -122,7 +122,7 @@ export async function toWebp(file: File): Promise<File> {
     const canvas = document.createElement("canvas");
     for (let attempt = 0; attempt < MAX_RESIZE_ATTEMPTS; attempt++) {
       drawBitmap(canvas, bitmap, width, height);
-      const encoded = await encodeWithinTarget(canvas);
+      const encoded = await encodeWithinTarget(canvas, targetBytes);
 
       if (encoded.fitsTarget) {
         return new File([encoded.blob], webpName(file.name), {
@@ -136,7 +136,7 @@ export async function toWebp(file: File): Promise<File> {
 
       // File size is roughly proportional to pixel count. Use its square root
       // to estimate the next dimensions, with conservative bounds per pass.
-      const estimatedScale = Math.sqrt(TARGET_SIZE_BYTES / encoded.blob.size) * 0.95;
+      const estimatedScale = Math.sqrt(targetBytes / encoded.blob.size) * 0.95;
       const resizeScale = Math.max(0.7, Math.min(0.9, estimatedScale));
       const nextLongEdge = Math.max(1, Math.min(longEdge - 1, Math.floor(longEdge * resizeScale)));
       const dimensionScale = nextLongEdge / longEdge;
@@ -144,7 +144,7 @@ export async function toWebp(file: File): Promise<File> {
       height = Math.max(1, Math.round(height * dimensionScale));
     }
 
-    throw new Error("Không thể nén ảnh dưới 80 KB. Vui lòng thử ảnh khác.");
+    throw new Error(`Không thể nén ảnh dưới ${Math.round(targetBytes / 1024)} KB. Vui lòng thử ảnh khác.`);
   } finally {
     bitmap.close();
   }

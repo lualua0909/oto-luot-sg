@@ -11,9 +11,11 @@ import * as leads from "@/lib/data/leads";
 import * as brands from "@/lib/data/brands";
 import * as content from "@/lib/data/content";
 import * as settings from "@/lib/data/settings";
+import * as banners from "@/lib/data/banners";
 import * as users from "@/lib/data/users";
 import type { Brand, Lead, ShowroomSettings } from "@/lib/types";
 import type { ActionResult } from "@/lib/action-result";
+import type { BannerSlide } from "@/lib/banners";
 
 /**
  * Next.js hides the message of an error thrown by a server action in production
@@ -41,6 +43,9 @@ export async function getContentTextsAction() {
 }
 export async function getShowroomSettingsAction() {
   return settings.getShowroomSettings();
+}
+export async function getBannersAction() {
+  return banners.getBanners();
 }
 
 // ---- signed in ----
@@ -149,5 +154,11 @@ export async function adminSaveShowroomSettings(idToken: string, value: Showroom
   return run("adminSaveShowroomSettings", async () => {
     await requireAdmin(idToken);
     await settings.saveShowroomSettings(value);
+  });
+}
+export async function adminSaveBanners(idToken: string, slides: BannerSlide[]) {
+  return run("adminSaveBanners", async () => {
+    await requireAdmin(idToken);
+    await banners.saveBanners(slides);
   });
 }
