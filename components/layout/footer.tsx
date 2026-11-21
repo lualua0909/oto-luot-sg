@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthorCredit } from "../author-credit/author-credit";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Facebook } from "lucide-react";
@@ -126,6 +127,7 @@ export function Footer() {
           </Link>
         </div>
       </div>
+      <AuthorCredit />
     </footer>
   );
 }

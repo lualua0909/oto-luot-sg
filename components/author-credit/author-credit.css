@@ -1,0 +1,16 @@
+/* Self-contained: no shared tokens, inherits only text color so it fits any footer. */
+.nad-author-credit {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 10px 16px 14px;
+  text-align: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: inherit;
+  opacity: 0.5;
+}
